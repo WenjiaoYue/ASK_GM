@@ -155,7 +155,7 @@
 
 		<!-- Empty state -->
 		{#if !chatList.length || chatList.length === 0}
-		<div class="flex flex-col items-center justify-center py-6">
+		<!-- <div class="flex flex-col items-center justify-center py-6">
 			<div class="text-sm">No chats found</div>
 			<button
 				on:click={handleCreateNewChat}
@@ -163,7 +163,7 @@
 			>
 				Create new chat
 			</button>
-		</div>
+		</div> -->
 	{/if}
 
 	<div class="carousel carousel-vertical mt-4 sm:h-[5rem] md:h-[10rem] lg:h-[20rem] xl:h-[26rem] overflow-auto">
