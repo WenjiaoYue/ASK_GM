@@ -61,7 +61,7 @@ function chatMessage(chatMessages: ChatMessage[], type: any, blob?: any, filenam
 
 	const msgDataDict: { [key: string]: any } = {
 		"knowledge": {
-			"translated":translatedQuery,
+			"translated_query":translatedQuery,
 			"query": question,
 			"domain": type.knowledge,
 			"blob": blob,
