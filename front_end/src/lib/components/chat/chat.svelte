@@ -89,13 +89,13 @@
 		const translatedQuery = await chatResponse.translatedQuery(
 			knowledgeContent
 		);
-		console.log(translatedQuery);
 
 		const eventSource = chatResponse.chatMessage(
 			chatMessages,
 			type,
 			blob,
 			filename,
+			knowledgeContent,
 			translatedQuery
 		);
 		eventSource.addEventListener("error", handleError);

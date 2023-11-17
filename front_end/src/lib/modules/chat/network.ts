@@ -46,7 +46,7 @@ async function translatedQuery(knowledgeContent:string) {
 	return queryMessage;
 }
 
-function chatMessage(chatMessages: ChatMessage[], type: any, blob?: any, filename?: any, question?: string): SSE {
+function chatMessage(chatMessages: ChatMessage[], type: any, blob?: any, filename?: any, question?: string, translatedQuery?: string): SSE {
 	// chatMessage
 	const initWord =
 		"A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human questions.\n";
@@ -61,6 +61,7 @@ function chatMessage(chatMessages: ChatMessage[], type: any, blob?: any, filenam
 
 	const msgDataDict: { [key: string]: any } = {
 		"knowledge": {
+			"translated":translatedQuery,
 			"query": question,
 			"domain": type.knowledge,
 			"blob": blob,
