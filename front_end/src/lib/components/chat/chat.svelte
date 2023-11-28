@@ -226,9 +226,9 @@
 			</div>
 		</div>
 		<div class="flex justify-between">
-			<span class="text-xs text-slate-400">
+			<span class="text-[0.65rem] text-slate-400">
 				ASK GM can make mistakes. Consider checking important information.			
 			</span>
-			<span>{query.length}/1200</span></div>
+			<span  class="text-[0.85rem]">{query.length}/1200</span></div>
 	</div>
 </div>
