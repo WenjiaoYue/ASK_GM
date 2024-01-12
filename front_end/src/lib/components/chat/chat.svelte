@@ -149,7 +149,7 @@
 	>
 		<ChatMessage
 			type="Assistant"
-			message={`Welcome to Intel ASK GM! 😊`}
+			message={`Welcome to Neuralchat User Trial Demo! 😊`}
 			displayTimer={false}
 			hiddenTool={true}
 		/>
@@ -227,7 +227,7 @@
 		</div>
 		<div class="flex justify-between">
 			<span class="text-xs text-slate-400">
-				ASK GM can make mistakes. Consider checking important information.			
+				AI assistant can make mistakes. Consider checking important information.			
 			</span>
 			<span>{query.length}/1200</span></div>
 	</div>

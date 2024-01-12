@@ -50,74 +50,13 @@
 		</div>
 	</div>
 	<div
-		class="h-full w-full rounded-3xl bg-white px-6 shadow sm:w-full xl:w-2/3"
+		class="h-full w-full rounded-3xl bg-white px-6 shadow sm:w-full xl:w-2/3 mx-28"
 	>
 		{#key currentChatID}
 			<Chat bind:chatId={currentChatID} bind:selectedContent={selectedContent} />
 		{/key}
 	</div>
-	<div
-		class="carousel carousel-vertical w-0 overflow-auto sm:w-0 md:w-1/3 xl:w-1/3"
-	>
-		<div class="mb-4 sm:ml-4 xl:mr-4">
-			<div class="rounded-2xl bg-white shadow-lg">
-				<div class="p-4">
-					<div class="mb-6 flex items-center justify-between">
-						<div class="flex items-center">
-							<QA />
-							<div class="flex flex-col">
-								<span class="text-md ml-2 font-bold text-black"
-									>Q&A</span
-								>
-								<span class="ml-2 text-sm text-gray-500 dark:text-white"
-									>How can I help you?</span
-								>
-							</div>
-						</div>
-					</div>
-					<div
-						class="my-4 flex flex-row flex-wrap items-center justify-start gap-x-2 space-y-1"
-					>
-						{#each labelList as { style, content: field }}
-							<!-- svelte-ignore a11y-click-events-have-key-events -->
-							<button
-								class="items-center rounded-md px-4 py-1 text-xs font-semibold {style}"
-								on:click={() => {
-									selectField = field;
-								}}
-							>
-								{field}
-							</button>
-						{/each}
-					</div>
-					<div class="m-auto block h-full">
-						<div class="flex items-center justify-between">
-							<p class="text-md font-bold text-black">
-								Related questions:
-							</p>
-							<Question />
-						</div>
-						<div
-							class="carousel carousel-vertical overflow-x-hidden overflow-y-scroll"
-						>
-							{#each questionDict[selectField] as { question }}
-								<button
-									class="justify-left flex items-center border-b-2 border-gray-100 px-4 py-2 text-gray-600 hover:bg-blue-100 active:bg-blue-500 active:text-white"
-									on:click={() => (selectedContent = question)}
-								>
-									<p
-										class="flex items-center text-left text-xs"
-									>
-										{question}
-									</p>
-								</button>
-							{/each}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	
 </div>
 
 

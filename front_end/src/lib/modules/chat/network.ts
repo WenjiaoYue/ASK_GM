@@ -61,11 +61,12 @@ function chatMessage(chatMessages: ChatMessage[], type: any, blob?: any, filenam
 
 	const msgDataDict: { [key: string]: any } = {
 		"knowledge": {
-			"translated_query":translatedQuery,
 			"query": question,
-			"domain": type.knowledge,
-			"blob": blob,
-			"filename": filename,
+			"translated": translatedQuery,
+			"knowledge_base_id": "default",
+			"stream": true,
+			"max_new_tokens": 128,
+			"return_link": true
 		}
 	}
 	
@@ -128,12 +129,15 @@ async function fetchFunc(url, init) {
 async function getKnowledgeBaseId(files) {
 	// console.log('10/19 ---', files, knowledge_base_id.get());
 	
-	const UploadKnowledge_URL = KNOWLEDGE_URL + '/upload';
+	const UploadKnowledge_URL = KNOWLEDGE_URL + '/append';
 	const formData = new FormData();
 
 	for (const file of files) {
 		formData.append('file', file);
 	}
+
+	formData.append('knowledge_base_id', 'default');
+
 
 	const init: RequestInit = {
 		method: "POST",

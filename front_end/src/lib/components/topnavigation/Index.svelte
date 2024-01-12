@@ -44,7 +44,7 @@
 						&#8801;
 					</button>
 				</div>
-				<p class="mt-2 text-xl font-bold">Intel ASK GM</p>
+				<p class="mt-2 text-xl font-bold">Neuralchat User Trial Demo</p>
 			</div>
 			{#if $admin$ !== 'admin'}
 
@@ -81,7 +81,7 @@
 >
 	<form class="flex flex-col space-y-6" action="#">
 		<h3 class="mb-4 text-xl font-medium text-black">
-			Sign in to Intel ASK GM
+			Sign trial demo 
 		</h3>
 		<Label class="space-y-2">
 			<!-- <span class="text-white">Email</span>

@@ -11,7 +11,7 @@ interface MenuItem {
 
 const data: MenuItem[] = [
   {
-    title: 'ASK GM',
+    title: 'Trial Demo',
     icon: HomeIcon,
     link: '/',
     admin: false

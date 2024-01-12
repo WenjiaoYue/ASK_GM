@@ -100,24 +100,15 @@
 			<div
 				class="bg-white px-6 py-8 text-center lg:flex lg:flex-shrink-0 lg:flex-col lg:justify-center lg:p-12"
 			>
-				<p class="text-lg font-bold leading-6 text-gray-900">
-					Send to
-				</p>
+			
 				<div
-					class="mt-4 flex items-center justify-center text-3xl font-extrabold leading-none text-gray-900"
+					class="mt-4 flex items-center justify-center text-base font-extrabold leading-none text-gray-900"
 				>
-					<span>ask.gm.zizhu@intel.com</span>
+					<span>Please visit the Official Website for more resource.</span>
 				</div>
-				<p class="mt-4 text-sm leading-5">
-					<span
-						class=" inline-block font-medium text-gray-500"
-					>
-						Your questions will be answered in our monthly newsletter.
-					</span>
-				</p>
 				<div class="mt-6">
 					<div class="rounded-md shadow">
-						<a href="https://askintel.intel.com/" target="_blank">
+						<a href="https://github.com/intel/intel-extension-for-transformers" target="_blank">
 							<button
 								type="button"
 								class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200"

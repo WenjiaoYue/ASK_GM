@@ -114,7 +114,7 @@
 	 */
 	let showButton = [];
 
-	let Library = [{ content: "Intel ZiZhu Q&A." }];
+	let Library = [{ content: "Local Knowledge Base." }];
 
 	function addKnowledgeFiles() {
 		document.getElementById("getFile")?.click();

@@ -1,0 +1,19 @@
+npm ERR! code ENOENT
+npm ERR! syscall open
+npm ERR! path /home/itrex/wenjiao/ASK_GM/ASK_GM/package.json
+npm ERR! errno -2
+npm ERR! enoent ENOENT: no such file or directory, open '/home/itrex/wenjiao/ASK_GM/ASK_GM/package.json'
+npm ERR! enoent This is related to npm not being able to find a file.
+npm ERR! enoent 
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /home/itrex/.npm/_logs/2023-11-24T08_29_50_583Z-debug-0.log
+npm ERR! code ENOENT
+npm ERR! syscall open
+npm ERR! path /home/itrex/wenjiao/ASK_GM/ASK_GM/package.json
+npm ERR! errno -2
+npm ERR! enoent ENOENT: no such file or directory, open '/home/itrex/wenjiao/ASK_GM/ASK_GM/package.json'
+npm ERR! enoent This is related to npm not being able to find a file.
+npm ERR! enoent 
+
+npm ERR! A complete log of this run can be found in: /root/.npm/_logs/2023-11-24T08_55_22_957Z-debug-0.log
