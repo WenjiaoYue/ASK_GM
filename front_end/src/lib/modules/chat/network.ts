@@ -65,7 +65,7 @@ function chatMessage(chatMessages: ChatMessage[], type: any, blob?: any, filenam
 			"translated": translatedQuery,
 			"knowledge_base_id": "default",
 			"stream": true,
-			"max_new_tokens": 128,
+			"max_new_tokens": 1024,
 			"return_link": true
 		}
 	}
