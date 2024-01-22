@@ -14,21 +14,18 @@
 		storageFiles,
 	} from "$lib/components/shared/shared.store";
 	import csvIcon from "$lib/assets/icons/csv.svg";
-	import { Progressbar } from "flowbite-svelte";
+	import { Progressbar, Modal } from "flowbite-svelte";
 	import { Alert } from "flowbite-svelte";
-
+	import SvelteTree from "$lib/components/treeView/svelte-tree.svelte";
+	
 	/**
 	 * @type {string | any[]}
 	 */
-	let newFiles = [];
 	let showAlert = false;
+	let showDirectory = false;
+	let chooseDir = undefined
 
 	$: files = $storageFiles ? $storageFiles : [];
-
-	$: {
-		newFiles.length ? (files = [...files, ...newFiles]) : null;
-		newFiles = [];
-	}
 
 	$: {
 		files && files.length && (files.length !== $storageFiles.length)? filterFiles(files) : null;
@@ -90,28 +87,56 @@
 		handleUploadBegin();
 	}
 
+	function fileListToObject(fileList: FileList) {
+		let root = {
+			name: fileList[0].webkitRelativePath.split("/")[0],
+			id: fileList[0].webkitRelativePath.split("/")[0],
+			type: 'Directory',
+			children: []
+		};
+
+		for (let i = 0; i < fileList.length; i++) {
+			let file = fileList[i];
+			let pathParts = file.webkitRelativePath.split('/');
+			let subObj = root.children;
+			for (let j = 1; j < pathParts.length - 1; j++) {
+				let part = pathParts[j];
+
+				let existItem = subObj.find(el => el.name === part)
+				if (existItem) {
+					subObj = existItem.children
+				} else {
+					let newItem = {
+						name: part,
+						id: pathParts.slice(0, j + 1).join('/'),
+						type: 'Directory',
+						children: []
+					}
+					subObj.push(newItem)
+					subObj = newItem.children;
+				}
+			}
+			subObj.push({
+				name: pathParts[pathParts.length - 1],
+				id: file.webkitRelativePath,
+				type: 'File',
+			})
+		}
+
+		return root;
+	}
+
 	function uploadFolder(newDirectory) {
 		if (newDirectory && newDirectory.length > 0) {
-			const folderName = newDirectory[0].webkitRelativePath.split("/")[0];
+			const obj = fileListToObject(newDirectory)
+			const folderName = obj.name
 			const folderObject = {
-				[folderName]: newDirectory,
+				[folderName]: obj,
 			};
-			files.push(folderObject);
+			files = [...files, folderObject];
 		}
 		return files;
 	}
-	/**
-	 * @type {never[]}
-	 */
-	let newDirectory = [];
-	$: {
-		newDirectory ? (files = uploadFolder(newDirectory)) : null;
-		newDirectory = [];
-	}
-
-	/**
-	 * @type {any[]}
-	 */
 	let showButton = [];
 
 	let Library = [{ content: "Local Knowledge Base." }];
@@ -131,6 +156,19 @@
 	function removeFile(name, index) {
 		files.splice(index, 1);
 		files = files;
+	}
+
+	function handleFilesUpload(e: HTMLInputElement) {
+		files = [...files, ...e.target.files]
+	}
+
+	function handleUploadDir(e: HTMLInputElement) {
+		uploadFolder(e.target.files)
+	}
+
+	function handleDirClick(file) {
+		chooseDir = file
+		showDirectory = true
 	}
 </script>
 
@@ -171,7 +209,7 @@
 				</p>
 				<div class="flex flex-row-reverse gap-5">
 					<input
-						bind:files={newFiles}
+						on:change={handleFilesUpload}
 						type="file"
 						style="display:none"
 						id="getFile"
@@ -191,7 +229,7 @@
 					</button>
 
 					<input
-						bind:files={newDirectory}
+						on:change={handleUploadDir}
 						type="file"
 						id="getDirectory"
 						webkitdirectory
@@ -239,12 +277,14 @@
 											{file.name}
 										</p>
 									{:else}
-										<div class="flex-shrink-0">
-											<Folder />
-										</div>
-										<p class="ml-3 text-sm leading-5 text-gray-700">
-											{Object.keys(file)}
-										</p>
+										<button on:click={() => handleDirClick(Object.values(file)[0])}>
+											<div class="flex-shrink-0">
+												<Folder />
+											</div>
+											<p class="ml-3 text-sm leading-5 text-gray-700">
+												{Object.keys(file)[0]}
+											</p>
+										</button>
 									{/if}
 
 									{#if showButton[index]}
@@ -320,3 +360,15 @@
 		</div>
 	</div>
 </div>
+
+
+
+<Modal
+	bind:open={showDirectory}
+	size="xs"
+	autoclose={true}
+	class="z-50 w-full p-10"
+	outsideclose
+>
+	<SvelteTree data={chooseDir.children} />
+</Modal>

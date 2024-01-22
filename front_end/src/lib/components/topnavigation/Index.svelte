@@ -8,17 +8,24 @@
 	let email = "";
 	let password = "";
 
+	onMount(() => {
+		if (sessionStorage.getItem('admin')) {
+			admin$.set('admin')
+		}
+	})
+
 	const toggle = () => {
 		$open = !$open;
 	};
 
-	onMount(() => {
-		console.log('admin$', $admin$);
-		
-	});
+	function storeInSession() {
+		sessionStorage.setItem('admin', 'admin');
+	}
+
 	function setLogin() {
 		if (email === "admin" && password === "admin") {
 			admin$.set('admin');
+			storeInSession()
 		}else {
 			admin$.set('');
 		}
@@ -46,25 +53,25 @@
 				</div>
 				<p class="mt-2 text-xl font-bold">Neuralchat User Trial Demo</p>
 			</div>
-			{#if $admin$ !== 'admin'}
 
-			<Button
-				on:click={() => (formModal = true)}
-				class="rounded-lg bg-indigo-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200"
-			>
-				<svg
-					class="h-6 w-6 p-1 text-white"
-					aria-hidden="true"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="currentColor"
-					viewBox="0 0 14 18"
+			{#if $admin$ !== 'admin'}
+				<Button
+					on:click={() => (formModal = true)}
+					class="rounded-lg bg-indigo-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200"
 				>
-					<path
-						d="M7 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm2 1H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
-					/>
-				</svg>
-				<p class="pl-1">Login</p>
-			</Button>
+					<svg
+						class="h-6 w-6 p-1 text-white"
+						aria-hidden="true"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="currentColor"
+						viewBox="0 0 14 18"
+					>
+						<path
+							d="M7 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm2 1H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
+						/>
+					</svg>
+					<p class="pl-1">Login</p>
+				</Button>
 			{/if}
 
 		</div>
