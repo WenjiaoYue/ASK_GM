@@ -3,10 +3,13 @@
 	import { open } from "$lib/components/shared/store";
 	import { Button, Modal, Label, Input } from "flowbite-svelte";
 	import { admin$ } from "$lib/components/shared/shared.store";
+	import { userLogin } from '$lib/modules/chat/network'
+
 	let formModal = false;
 
 	let email = "";
 	let password = "";
+	let username = ""
 
 	onMount(() => {
 		if (sessionStorage.getItem('admin')) {
@@ -22,13 +25,21 @@
 		sessionStorage.setItem('admin', 'admin');
 	}
 
-	function setLogin() {
-		if (email === "admin" && password === "admin") {
+	async function setLogin() {
+		const res = await userLogin(email, password)
+		username = res.given_name
+		if (username === "Ning") {
 			admin$.set('admin');
 			storeInSession()
 		}else {
 			admin$.set('');
 		}
+	}
+
+	async function logout() {
+		username = ""
+		admin$.set('');
+		storeInSession()
 	}
 </script>
 
@@ -54,7 +65,29 @@
 				<p class="mt-2 text-xl font-bold">Neuralchat User Trial Demo</p>
 			</div>
 
-			{#if $admin$ !== 'admin'}
+			{#if username}
+				<p class="relative text-lg whitespace-nowrap group">
+					Hello, <span class="font-semibold">{username}</span>
+
+					<Button
+						on:click={logout}
+						class="group-hover:flex hidden absolute top-full right-0 rounded-lg bg-indigo-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200"
+					>
+						<svg
+							class="h-6 w-6 p-1 text-white"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="currentColor"
+							viewBox="0 0 14 18"
+						>
+							<path
+								d="M7 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm2 1H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
+							/>
+						</svg>
+						<p class="pl-1">Logout</p>
+					</Button>
+				</p>
+			{:else}
 				<Button
 					on:click={() => (formModal = true)}
 					class="rounded-lg bg-indigo-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200"

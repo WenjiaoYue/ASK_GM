@@ -8,6 +8,7 @@ const KNOWLEDGE_URL = env.KNOWLEDGE_URL;
 const TRANSLATE_URL = env.TRANSLATE_URL;
 const DETECT_URL = env.DETECT_URL;
 const DOWNLOAD_FEEDBACK_URL = env.DOWNLOAD_FEEDBACK_URL
+const LOGIN_URL = env.LOGIN_URL
 
 
 function regFunc(currentMsg) {
@@ -86,6 +87,19 @@ function chatGPT(msgs: ChatMessage[], api_key: string): SSE {
 	})
 }
 
+function userLogin(username, password) {
+	const init: RequestInit = {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			username,
+			password,
+		}),
+	};
+
+	return fetchFunc(LOGIN_URL, init);
+}
+
 function translateFunc(msg: string, target: string) {
 	let translateObject = {
 		key: "AIzaSyD4m9izGcZnv55l27ZvlymdmNsGK7ri_Gg",
@@ -98,7 +112,6 @@ function translateFunc(msg: string, target: string) {
 	};
 
 	return fetchFunc(TRANSLATE_URL, init);
-
 }
 async function detectFunc(msg: string) {
 	let translateObject = {
@@ -164,3 +177,5 @@ async function downloadfile() {
 }
 
 export default { modelList: chatServer.modelList, chatMessage, chatGPT, regFunc, translateFunc, detectFunc, getKnowledgeBaseId, translatedQuery, downloadfile };
+
+export { userLogin }
