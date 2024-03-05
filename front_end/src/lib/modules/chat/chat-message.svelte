@@ -222,7 +222,7 @@
 					{/if}
 				</figure>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<figure
+				<!-- <figure
 					class="ml-1 h-5 w-5 cursor-pointer text-black hover:text-yellow-600 hover:opacity-100"
 					on:click={handleImgClick}
 				>
@@ -231,7 +231,7 @@
 					{:else}
 						<TextToImgButtonIcon />
 					{/if}
-				</figure>
+				</figure> -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<figure
 					class="h-5 w-3 cursor-pointer text-black opacity-70 hover:text-yellow-600 hover:opacity-100"
