@@ -229,6 +229,6 @@
 			<span class="text-xs text-slate-400">
 				AI assistant can make mistakes. Consider checking important information.			
 			</span>
-			<span>{query.length}/1200</span></div>
+			<span  class="text-[0.85rem]">{query.length}/1200</span></div>
 	</div>
 </div>
