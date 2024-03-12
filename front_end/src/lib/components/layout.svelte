@@ -6,6 +6,7 @@
 	import Overlay from '$lib/components/shared/overlay.svelte';
 	import TopNavigation from '$lib/components/topnavigation/Index.svelte';
 	import SideNavigation from '$lib/components/sidenavigation/Index.svelte';
+	import Notifications from "svelte-notifications";
 
 	const style = {
 		container: `bg-gray-100 h-screen overflow-hidden relative`,
@@ -25,6 +26,8 @@
 	}
 </script>
 
+
+<Notifications>
 <div class={style.container}>
 	<div class="flex items-start">
 		<Overlay />
@@ -37,3 +40,5 @@
 		</div>
 	</div>
 </div>
+
+</Notifications>
