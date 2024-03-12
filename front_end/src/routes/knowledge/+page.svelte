@@ -336,15 +336,15 @@
 			<!-- Download csv -->
 
 			<div
-				class="flex flex-col justify-center gap-4 rounded-r-lg bg-white px-16 py-8"
+				class="flex flex-col justify-center gap-4 rounded-r-lg bg-white px-10 py-8"
 			>
 				<div class="flex items-center justify-center gap-2">
 					<div class="rounded-lg bg-gray-200 py-1">
 						<img src={csvIcon} class="h-18 w-18 p-2" alt="" />
 					</div>
 					<div>
-						<p class="px-10 pt-2 text-center text-lg font-bold text-gray-900">
-							Download CSV Files
+						<p class="px-2 pt-2 text-center text-lg font-bold text-gray-900">
+							Download Feedback Files
 						</p>
 					</div>
 				</div>

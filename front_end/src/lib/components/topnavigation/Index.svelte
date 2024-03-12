@@ -1,45 +1,67 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount } from "svelte";
 	import { open } from "$lib/components/shared/store";
 	import { Button, Modal, Label, Input } from "flowbite-svelte";
 	import { admin$ } from "$lib/components/shared/shared.store";
-	import { userLogin } from '$lib/modules/chat/network'
+	import { userLogin } from "$lib/modules/chat/network";
+	import { getNotificationsContext } from "svelte-notifications";
 
 	let formModal = false;
-
 	let email = "";
 	let password = "";
-	let username = ""
+	let username = "";
+
+	const { addNotification } = getNotificationsContext();
 
 	onMount(() => {
-		if (sessionStorage.getItem('admin')) {
-			admin$.set('admin')
+		if (sessionStorage.getItem("userInfo")) {
+			console.log(
+				'sessionStorage.getItem("userInfo")',
+				sessionStorage.getItem("userInfo")
+			);
+			let userName = sessionStorage.getItem("userInfo");
+			if (userName) {
+				admin$.set(userName);
+				username = userName;
+			}
+
 		}
-	})
+	});
 
 	const toggle = () => {
 		$open = !$open;
 	};
 
 	function storeInSession() {
-		sessionStorage.setItem('admin', 'admin');
+		sessionStorage.setItem("userInfo", username);
 	}
 
 	async function setLogin() {
-		const res = await userLogin(email, password)
-		username = res.given_name
-		if (username === "Ning") {
-			admin$.set('admin');
-			storeInSession()
-		}else {
-			admin$.set('');
+		if (email === "admin" && password === "admin") {
+			admin$.set("admin");
+			username = "admin";
+			storeInSession();
+		} else {
+			const res = await userLogin(email, password);
+			if (res.msg == "Login successful") {
+				username = res.user_info.given_name;
+				admin$.set(username);
+				storeInSession();
+			} else {
+				addNotification({
+					text: "login fail",
+					position: "top-right",
+					type: "error",
+					removeAfter: 1000,
+				});
+			}
 		}
 	}
 
 	async function logout() {
-		username = ""
-		admin$.set('');
-		storeInSession()
+		username = "";
+		admin$.set("");
+		storeInSession();
 	}
 </script>
 
@@ -66,12 +88,12 @@
 			</div>
 
 			{#if username}
-				<p class="relative text-lg whitespace-nowrap group">
+				<p class="group relative whitespace-nowrap text-lg">
 					Hello, <span class="font-semibold">{username}</span>
 
 					<Button
 						on:click={logout}
-						class="group-hover:flex hidden absolute top-full right-0 rounded-lg bg-indigo-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200"
+						class="absolute right-0 top-full hidden rounded-lg bg-indigo-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200 group-hover:flex"
 					>
 						<svg
 							class="h-6 w-6 p-1 text-white"
@@ -106,11 +128,9 @@
 					<p class="pl-1">Login</p>
 				</Button>
 			{/if}
-
 		</div>
 	</div>
 </header>
-
 
 <Modal
 	bind:open={formModal}
@@ -120,9 +140,7 @@
 	outsideclose
 >
 	<form class="flex flex-col space-y-6" action="#">
-		<h3 class="mb-4 text-xl font-medium text-black">
-			Sign trial demo 
-		</h3>
+		<h3 class="mb-4 text-xl font-medium text-black">Sign trial demo</h3>
 		<Label class="space-y-2">
 			<!-- <span class="text-white">Email</span>
 			<Input

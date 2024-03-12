@@ -51,6 +51,7 @@
     "fuse": "^0.4.0",
     "fuse.js": "^6.6.2",
     "ramda": "^0.29.0",
+    "sjcl": "^1.0.8",
     "sse.js": "^0.6.1",
     "svelte-notifications": "^0.9.98"
   }

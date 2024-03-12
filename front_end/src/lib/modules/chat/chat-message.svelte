@@ -85,18 +85,8 @@
 	}
 
 	async function handleTranslateClick() {
-		let sourceLanguage = "";
-		clickTranslate = !clickTranslate;
-		const result = await chatResponse.detectFunc(message);
-		if (result) {
-			sourceLanguage = result.data.detections[0][0].language;
-		}
-
-		const translateResult = await chatResponse.translateFunc(
-			message,
-			language_map[sourceLanguage]
-		);
-		message = translateResult.data.translations[0].translatedText;
+		const translateResult = await chatResponse.translateFunc(message);		
+		message = translateResult.tranlated_content;
 	}
 
 	function removeHtmlContent(input: string): string {

@@ -86,9 +86,9 @@
 			knowledge: "ASK_GM",
 		};
 		const knowledgeContent = chatMessages[chatMessages.length - 1].content;
-		const translatedQuery = await chatResponse.translatedQuery(
-			knowledgeContent
-		);
+		// const translatedQuery = await chatResponse.translatedQuery(
+		// 	knowledgeContent
+		// );
 
 		const eventSource = chatResponse.chatMessage(
 			chatMessages,
@@ -96,7 +96,6 @@
 			blob,
 			filename,
 			knowledgeContent,
-			translatedQuery
 		);
 		eventSource.addEventListener("error", handleError);
 		eventSource.addEventListener("message", (e) => {
