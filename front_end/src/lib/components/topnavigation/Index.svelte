@@ -16,10 +16,12 @@
 	import { userLogin } from "$lib/modules/chat/network";
 	import { getNotificationsContext } from "svelte-notifications";
 	import { Icon } from "flowbite-svelte-icons";
-
+	import Documentation from "$lib/components/documentation/Index.svelte";
+	import Question from "$lib/components/sidenavigation/icons/Question.svelte";
 
 	let formModal = false;
 	let deleteModal = false;
+	let helpModal = false;
 	let email = "";
 	let password = "";
 	let username = "";
@@ -85,14 +87,13 @@
 	}
 
 	async function logout() {
-
 		username = "";
 		admin$.set("");
 		sessionStorage.removeItem("userInfo");
 	}
 </script>
 
-<header class="relative z-10 h-16 w-full items-center bg-white shadow md:h-20">
+<header class="relative z-10 h-16 w-full bg-[#00285a]">
 	<div
 		class="flex-center relative mx-auto flex h-full flex-col justify-center px-3"
 	>
@@ -100,33 +101,40 @@
 			class="lg:max-w-68 relative flex w-full items-center pl-1 sm:ml-0 sm:pr-2"
 		>
 			<div class="relative left-0 flex w-full items-center">
-				<div class="group relative flex h-full w-12 items-center">
-					<button
-						type="button"
-						aria-expanded="false"
-						aria-label="Toggle sidenav"
-						on:click={toggle}
-						class="text-4xl text-black focus:outline-none"
-					>
-						&#8801;
-					</button>
-				</div>
-				<p class="mt-2 text-xl font-bold">Intel ASK GM</p>
+				<p class="mt-2 text-xl font-bold text-white">Intel ASK GM</p>
 			</div>
+			<Button
+				on:click={() => (helpModal = true)}
+				class="mr-1  px-4 py-2 text-center text-base font-semibold text-white transition duration-200 ease-in hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-sky-200"
+			>
+				<Question />
+				<p class="pl-1">Help</p>
+			</Button>
 			{#if username}
 				<!-- logout and login info -->
-				<Button pill color="light" id="avatar_with_name" class="px-4 py-1">
+				<Button pill color="light" id="avatar_with_name" class="px-4 py-0">
 					<Avatar src="/src/lib/assets/images/person.svg" class="me-2" />
 					{username}
 				</Button>
 				<Dropdown inline triggeredBy="#avatar_with_name">
-					<div slot="header" class="px-4 py-2">
-						<span class="block text-sm text-gray-900 dark:text-white"
-							>{username}</span
+					{#if username !== "admin"}
+						<div class="px-4 py-2">
+							<span class="block text-sm text-gray-900 dark:text-white"
+								>{username}</span
+							>
+							<span class="block truncate text-sm font-medium">{address}</span>
+						</div>
+					{:else}
+						<DropdownItem>
+							<a href="/">Index</a></DropdownItem
 						>
-						<span class="block truncate text-sm font-medium">{address}</span>
-					</div>
-					<DropdownItem slot="footer" on:click={() => (deleteModal = true)}>Sign out</DropdownItem>
+						<DropdownItem>
+							<a href="/knowledge">Knowledge</a></DropdownItem
+						>
+					{/if}
+					<DropdownItem slot="footer" on:click={() => (deleteModal = true)}
+						>Sign out</DropdownItem
+					>
 				</Dropdown>
 			{:else}
 				<Button
@@ -208,4 +216,8 @@
 		>
 		<Button color="alternative">No, cancel</Button>
 	</div>
+</Modal>
+
+<Modal bind:open={helpModal} size="xl" autoclose={true} outsideclose>
+	<Documentation />
 </Modal>

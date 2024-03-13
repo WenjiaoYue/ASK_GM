@@ -2,6 +2,8 @@
 	// @ts-nocheck
 
 	import Knowledge from "$lib/assets/icons/Knowledge.svelte";
+	import UploadKnowledge from "$lib/assets/icons/upoadKnowledge.svelte";
+	import AdminKnowledge from "$lib/assets/icons/adminKnowledge.svelte";
 	import NoFile from "$lib/assets/icons/no-file.svelte";
 	import Folder from "$lib/assets/icons/Folder.svelte";
 	import UploadDirectoryIcon from "$lib/assets/icons/upload-directory.svelte";
@@ -24,12 +26,17 @@
 	} from "flowbite-svelte";
 	import { Alert } from "flowbite-svelte";
 	import PasteLink from "$lib/assets/icons/paste-link.svelte";
+	import { getNotificationsContext } from "svelte-notifications";
+
+	const { addNotification } = getNotificationsContext();
 
 	/**
 	 * @type {string | any[]}
 	 */
 	let newFiles = [];
 	let showAlert = false;
+	let uploading = false;
+	let status = true;
 
 	$: files = $storageFiles ? $storageFiles : [];
 
@@ -50,9 +57,7 @@
 
 	let urlValue = "";
 
-	async function deleteFile() {
-		
-	}
+	async function deleteFile() {}
 
 	async function handelPasteURL() {
 		const pasteUrlList = urlValue.split(";").map((url) => url.trim());
@@ -73,7 +78,8 @@
 			return;
 		}
 		const res = await fetchKnowledgeBaseIdByPaste(pasteUrlList);
-
+		console.log('res', res);
+		
 		addNotification({
 			text: "Uploaded successfully",
 			position: "top-left",
@@ -261,7 +267,6 @@
 					<button
 						on:click={() => (formModal = true)}
 						class="mt-6"
-						id="getDirectory"
 					>
 						<div
 							class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
@@ -281,65 +286,29 @@
 						</h4>
 						<div class="flex-1 border-t-2 border-gray-200" />
 					</div>
-					<ul class="lg:col-gap-8 lg:row-gap-5 mt-8 lg:grid lg:grid-cols-2">
-						{#if files}
-							<div>
-								<div class="flex-shrink-0">
-									<Knowledge />
+					<div>
+						<div class=" m-2 flex justify-center">
+							{#if status && !uploading}
+								<div class="relative p-2 pr-4">
+									<AdminKnowledge />
+									<button
+										class="absolute right-0 top-0 cursor-pointer"
+										on:click={() => deleteFile()}
+									>
+										<XMarkIcon />
+									</button>
 								</div>
-								<p class="ml-3 text-sm leading-5 text-gray-700">
-									Knowledge_Base
-								</p>
-							</div>
-							<button
-								class="float-right cursor-pointer ps-2"
-								on:click={() => deleteFile()}
-							>
-								<XMarkIcon />
-							</button>
-
-							<!-- {#if files?.length}
-							{#each files as file, index}
-								<li
-									class="mb-4 flex items-center lg:col-span-1"
-									on:mouseover={() => (showButton[index] = true)}
-									on:mouseleave={() => (showButton[index] = false)}
-									on:focus={() => (showButton[index] = true)}
-								>
-									{#if file instanceof File}
-										<div class="flex-shrink-0">
-											<Knowledge />
-										</div>
-										<p class="ml-3 text-sm leading-5 text-gray-700">
-											{file.name}
-										</p>
-									{:else}
-										<div class="flex-shrink-0">
-											<Folder />
-										</div>
-										<p class="ml-3 text-sm leading-5 text-gray-700">
-											{Object.keys(file)}
-										</p>
-									{/if}
-
-									{#if showButton[index]}
-										<div
-											class="float-right cursor-pointer ps-2"
-											on:click={() => removeFile(file.name, index)}
-											on:keypress={() => removeFile(file.name, index)}
-										>
-											<XMarkIcon />
-										</div>
-									{/if}
-								</li>
-							{/each} -->
-						{:else}
-							<div>
-								<NoFile />
-								<p class="mt-2 text-sm opacity-70">No files uploaded</p>
-							</div>
-						{/if}
-					</ul>
+								
+							{:else if status && uploading}
+								<UploadKnowledge />
+							{:else}
+								<div>
+									<NoFile />
+									<p class="mt-2 text-sm opacity-70">No files uploaded</p>
+								</div>
+							{/if}
+						</div>
+					</div>
 				</div>
 				<div class="mt-8">
 					<div class="flex items-center">
