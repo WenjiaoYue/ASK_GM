@@ -9,16 +9,14 @@
 		Dropdown,
 		DropdownItem,
 		Avatar,
-		DropdownHeader,
 		DropdownDivider,
-		
 	} from "flowbite-svelte";
 	import { admin$ } from "$lib/components/shared/shared.store";
 	import { userLogin } from "$lib/modules/chat/network";
 	import { getNotificationsContext } from "svelte-notifications";
 	import { Icon } from "flowbite-svelte-icons";
 	import Documentation from "$lib/components/documentation/Index.svelte";
-	import Question from "$lib/components/sidenavigation/icons/Question.svelte";
+	import Question from "$lib/assets/icons/Question.svelte";
 	import { goto } from "$app/navigation";
 
 	let formModal = false;

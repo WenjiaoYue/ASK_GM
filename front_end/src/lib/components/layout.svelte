@@ -5,7 +5,6 @@
 	import { open } from '$lib/components/shared/store';
 	import Overlay from '$lib/components/shared/overlay.svelte';
 	import TopNavigation from '$lib/components/topnavigation/Index.svelte';
-	import SideNavigation from '$lib/components/sidenavigation/Index.svelte';
 	import Notifications from "svelte-notifications";
 
 	const style = {
@@ -31,7 +30,6 @@
 <div class={style.container}>
 	<div class="flex items-start">
 		<Overlay />
-		<!-- <SideNavigation mobilePosition="right" /> -->
 		<div class={style.mainContainer}>
 			<TopNavigation />
 			<main class={style.main}>

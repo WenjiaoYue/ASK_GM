@@ -2,7 +2,7 @@
 	import Chat from "$lib/components/chat/chat.svelte";
 	import History from "$lib/components/chat/history.svelte";
 	import QAJSON from "$lib/assets/AskGMJson/Ask_GM_QA.json";
-	import OldHelp from "./sidenavigation/icons/oldHelp.svelte";
+	import OldHelp from "$lib/assets/icons/OldHelp.svelte";
 
 	const questionDict: object = QAJSON;
 	let selectField: string = "Zizhu Site";
