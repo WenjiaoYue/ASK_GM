@@ -175,14 +175,14 @@ async function getKnowledgeBaseId(files) {
 }
 
 async function downloadfile() {
-	let res = await fetch(DOWNLOAD_FEEDBACK_URL, {
+	const res = await fetch(DOWNLOAD_FEEDBACK_URL, {
 		method: "GET",
 	});
 
-	let blob = await res.blob();
-	let url = window.URL || window.webkitURL;
-	let link = url.createObjectURL(blob);
-	let a = document.createElement("a");
+	const blob = await res.blob();
+	const url = window.URL || window.webkitURL;
+	const link = url.createObjectURL(blob);
+	const a = document.createElement("a");
 	// a.setAttribute("download", `test.csv`);
 	a.setAttribute("href", link);
 	document.body.appendChild(a);

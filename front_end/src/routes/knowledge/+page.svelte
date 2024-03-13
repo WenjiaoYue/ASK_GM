@@ -29,6 +29,8 @@
 		Helper,
 		Button,
 	} from "flowbite-svelte";
+	import { Icon } from "flowbite-svelte-icons";
+
 	import { Alert } from "flowbite-svelte";
 	import PasteLink from "$lib/assets/icons/paste-link.svelte";
 	import { getNotificationsContext } from "svelte-notifications";
@@ -42,7 +44,7 @@
 	let newFiles = [];
 	let showAlert = false;
 	let uploading = false;
-	let status = true;
+	let status = false;
 
 	$: files = $storageFiles ? $storageFiles : [];
 
@@ -60,48 +62,48 @@
 	let uploadProgress = 0;
 	let uploadHandle: number;
 	let formModal = false;
+	let deleteModal = false;
 
 	let urlValue = "";
 
 	onMount(async () => {
 		const res = await fetchStatus();
-		console.log("res fetchStatus", res.is_uploaded);
+		status = res.is_uploaded;
 	});
 
 	async function deleteFile() {
 		const res = await fetchDelete();
-		console.log("res", res);
+		if (res.status) {
+			status = false;
+			addNotification({
+				text: "delete successfully",
+				position: "top-left",
+				type: "success",
+				removeAfter: 3000,
+			});
+		}
 	}
 
 	async function handelPasteURL() {
 		const pasteUrlList = urlValue.split(";").map((url) => url.trim());
-		// if (
-		// 	pasteUrlList.some((el) => {
-		// 		const regex =
-		// 			/^([\x09\x0A\x0D\x20-\x7E]|[\xC2-\xDF][\x80-\xBF]|\xE0[\xA0-\xBF][\x80-\xBF]|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}|\xED[\x80-\x9F][\x80-\xBF]|\xF0[\x90-\xBF][\x80-\xBF]{2}|[\xF1-\xF3][\x80-\xBF]{3}|\xF4[\x80-\x8F][\x80-\xBF]{2})*$/;
+		uploading = true;
+		formModal = false;
+		handleUploadBegin();
 
-		// 		return regex.test(el);
-		// 	})
-		// ) {
-		// 	addNotification({
-		// 		text: "Please upload valid links",
-		// 		position: "top-left",
-		// 		type: "success",
-		// 		removeAfter: 3000,
-		// 	});
-		// 	return;
-		// }
 		const res = await fetchKnowledgeBaseIdByPaste(pasteUrlList);
 		console.log("res", res);
-
-		addNotification({
-			text: "Uploaded successfully",
-			position: "top-left",
-			type: "success",
-			removeAfter: 3000,
-		});
-
-		formModal = false;
+		// succeed
+		if (res.status) {
+			addNotification({
+				text: "Uploaded successfully",
+				position: "top-right",
+				type: "success",
+				removeAfter: 3000,
+			});
+			uploading = false;
+			handleUploadEnd();
+			status = true;
+		}
 	}
 
 	function handleUploadBegin() {
@@ -149,13 +151,24 @@
 		let flattenedData = [];
 		flattenedData = flattenFiles(files);
 		console.log("flattenedData", flattenedData);
+		uploading = true;
+		handleUploadBegin();
 
 		// back_end
 		new Promise(async (resolve) => {
 			try {
-				const templateId = await chatResponse.getKnowledgeBaseId(flattenedData);
-				knowledge_base_id.set(templateId);
-				console.log("knowledge_base_id", knowledge_base_id);
+				const res = await chatResponse.getKnowledgeBaseId(flattenedData);
+				if (res == "Succeed") {
+					addNotification({
+						text: "Uploaded successfully",
+						position: "top-right",
+						type: "success",
+						removeAfter: 3000,
+					});
+					uploading = false;
+					handleUploadEnd();
+					status = true;
+				}
 				resolve();
 			} catch (error) {
 				console.error("An error occurred:", error);
@@ -166,7 +179,6 @@
 			handleUploadEnd();
 			showAndAutoDismissAlert();
 		});
-		handleUploadBegin();
 	}
 
 	function uploadFolder(newDirectory) {
@@ -179,8 +191,6 @@
 			filterFiles(files);
 		}
 		console.log("uploadFolder", files);
-
-
 
 		return files;
 	}
@@ -308,31 +318,33 @@
 				<div class="mt-8">
 					<div class="flex items-center">
 						<h4
-							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-indigo-600"
+							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-blue-600"
 						>
 							Your Knowledge Base
 						</h4>
 						<div class="flex-1 border-t-2 border-gray-200" />
 					</div>
 					<div>
-						<div class=" m-2 flex justify-center">
+						<div class="m-2 flex items-center justify-center">
 							{#if status && !uploading}
 								<div class="relative p-2 pr-4">
 									<AdminKnowledge />
 									<button
 										class="absolute right-0 top-0 cursor-pointer"
-										on:click={() => deleteFile()}
+										on:click={() => {
+											deleteModal = true;
+										}}
 									>
 										<XMarkIcon />
 									</button>
 								</div>
 							{:else if status && uploading}
-								<UploadKnowledge />
-							{:else}
-								<div>
-									<NoFile />
-									<p class="mt-2 text-sm opacity-70">No files uploaded</p>
+								<div class="animate-spin">
+									<UploadKnowledge />
 								</div>
+							{:else}
+								<NoFile />
+								<p class="mt-2 text-sm opacity-70">No files uploaded</p>
 							{/if}
 						</div>
 					</div>
@@ -340,7 +352,7 @@
 				<div class="mt-8">
 					<div class="flex items-center">
 						<h4
-							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-indigo-600"
+							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-blue-600"
 						>
 							Knowledge Base Library
 						</h4>
@@ -379,7 +391,7 @@
 				</div>
 				<button on:click={() => chatResponse.downloadfile()} class="mt-3">
 					<div
-						class="flex cursor-pointer items-center justify-center gap-2 rounded bg-indigo-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
+						class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
 					>
 						<DownloadDirectoryIcon />
 						Download Files
@@ -399,7 +411,27 @@
 
 	<Button
 		type="submit"
-		class="w-full bg-indigo-600"
+		class="w-full bg-blue-600"
 		on:click={() => handelPasteURL()}>Confirm</Button
 	>
+</Modal>
+
+<Modal bind:open={deleteModal} size="xs" autoclose>
+	<div class="text-center">
+		<Icon
+			name="exclamation-circle-outline"
+			class="mx-auto mb-4 h-12 w-12 text-gray-400"
+		/>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			Confirm Delete Knowledge Base?
+		</h3>
+		<Button
+			color="red"
+			class="mr-2"
+			on:click={() => {
+				deleteFile();
+			}}>Yes, I'm sure</Button
+		>
+		<Button color="alternative">No, cancel</Button>
+	</div>
 </Modal>

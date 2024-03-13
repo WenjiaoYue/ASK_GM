@@ -28,7 +28,7 @@
 				<div class="mt-8">
 					<div class="flex items-center">
 						<h4
-							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-indigo-600"
+							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-blue-600"
 						>
 							What&#x27;s included
 						</h4>
@@ -64,7 +64,7 @@
 				<div class="mt-8">
 					<div class="flex items-center">
 						<h4
-							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-indigo-600"
+							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-blue-600"
 						>
 							&amp; What&#x27;s not
 						</h4>
@@ -120,7 +120,7 @@
 						<a href="https://askintel.intel.com/" target="_blank">
 							<button
 								type="button"
-								class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200"
+								class="w-full rounded-lg bg-blue-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200"
 							>
 								More Information
 							</button></a
