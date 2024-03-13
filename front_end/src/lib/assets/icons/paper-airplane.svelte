@@ -3,7 +3,7 @@
 
   const classes = overrideClasses
     ? overrideClasses
-    : `w-5 h-5 text-gray-400 hover:text-gray-600`;
+    : `w-5 h-5 text-[#0068B5] hover:text-gray-600`;
 </script>
 
 <svg
@@ -11,7 +11,7 @@
   xmlns="http://www.w3.org/2000/svg"
   fill="none"
   viewBox="0 0 24 24"
-  stroke-width="1.5"
+  stroke-width="2"
   stroke="currentColor"
 >
   <path

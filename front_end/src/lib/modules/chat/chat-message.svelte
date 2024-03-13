@@ -85,8 +85,18 @@
 	}
 
 	async function handleTranslateClick() {
-		const translateResult = await chatResponse.translateFunc(message);		
-		message = translateResult.tranlated_content;
+		let sourceLanguage = "";
+		clickTranslate = !clickTranslate;
+		const result = await chatResponse.detectFunc(message);
+		if (result) {
+			sourceLanguage = result.data.detections[0][0].language;
+		}
+
+		const translateResult = await chatResponse.translateFunc(
+			message,
+			language_map[sourceLanguage]
+		);
+		message = translateResult.data.translations[0].translatedText;
 	}
 
 	function removeHtmlContent(input: string): string {
@@ -172,8 +182,8 @@
 	<div class="group relative">
 		<div
 			class={type === "Human" || type === "user"
-				? "wrap-style rounded-l-lg rounded-br-lg bg-blue-600 p-3 text-white"
-				: "wrap-style rounded-r-lg rounded-bl-lg bg-gray-200 p-5"}
+				? "wrap-style rounded-l-lg rounded-br-lg bg-sky-600 p-3 text-white"
+				: "wrap-style rounded-r-lg rounded-bl-lg bg-gray-200 p-5 text-black"}
 		>
 			{#if message.indexOf("blob:") !== -1}
 				<audio class="w-120 h-5" controls src={message} disabled={!message} />
@@ -212,7 +222,7 @@
 					{/if}
 				</figure>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- <figure
+				<figure
 					class="ml-1 h-5 w-5 cursor-pointer text-black hover:text-yellow-600 hover:opacity-100"
 					on:click={handleImgClick}
 				>
@@ -221,7 +231,7 @@
 					{:else}
 						<TextToImgButtonIcon />
 					{/if}
-				</figure> -->
+				</figure>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<figure
 					class="h-5 w-3 cursor-pointer text-black opacity-70 hover:text-yellow-600 hover:opacity-100"

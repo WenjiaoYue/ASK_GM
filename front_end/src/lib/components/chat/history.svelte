@@ -138,24 +138,24 @@
 			placeholder="Search"
 			type="text"
 			name="search"
-			class="block w-full rounded-2xl bg-gray-100 py-2 pl-10 pr-4 leading-normal text-gray-400 ring-opacity-90 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+			class="block w-full rounded-3xl bg-gray-100 py-2 pl-10 pr-4 leading-normal text-gray-400 ring-opacity-90 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-sky-500"
 		/>
 	</div>
 
 	<!-- New chat -->
 	<button
 		on:click={handleCreateNewChat}
-		class={`mb-2 flex h-10 w-full items-center rounded-md px-2 py-3 text-sm font-medium shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-[#ebf1f9] hover:text-black `}
+		class={`flex h-10 w-full items-center rounded-md px-2 py-3 text-sm text-white font-medium shadow-sm  bg-sky-600 hover:bg-sky-500`}
 	>
 		<PlusIcon
 			overrideClasses={"hover:text-gray-500 mr-3 flex-shrink-0 h-5 w-5"}
 		/>
-		New chat
+		Create new chat
 	</button>
 
 		<!-- Empty state -->
 		{#if !chatList.length || chatList.length === 0}
-		<!-- <div class="flex flex-col items-center justify-center py-6">
+		<div class="flex flex-col items-center justify-center py-6">
 			<div class="text-sm">No chats found</div>
 			<button
 				on:click={handleCreateNewChat}
@@ -163,7 +163,7 @@
 			>
 				Create new chat
 			</button>
-		</div> -->
+		</div>
 	{/if}
 
 	<div class="carousel carousel-vertical mt-4 sm:h-[5rem] md:h-[10rem] lg:h-[20rem] xl:h-[26rem] overflow-auto">

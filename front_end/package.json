@@ -46,14 +46,12 @@
   },
   "type": "module",
   "dependencies": {
-    "flowbite-svelte-icons": "^0.3.6",
     "echarts": "^5.4.2",
     "flowbite-svelte": "^0.38.5",
     "fuse": "^0.4.0",
     "fuse.js": "^6.6.2",
     "ramda": "^0.29.0",
     "sse.js": "^0.6.1",
-    "sjcl": "^1.0.8",
     "svelte-notifications": "^0.9.98"
   }
 }

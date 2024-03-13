@@ -1,7 +1,6 @@
 <script>
 	import { open } from '$lib/components/shared/store';
 	import SidenavItems from './Items.svelte';
-	import SidenavHeader from './Header.svelte';
 	import { clickOutside } from '$lib/components/shared/click-outside';
 
 	const style = {
@@ -29,7 +28,6 @@
        ${$open ? style.open : style.close} scrollbar`}
 >
 	<div class={style.container}>
-		<SidenavHeader />
 		<SidenavItems />
 	</div>
 </aside>

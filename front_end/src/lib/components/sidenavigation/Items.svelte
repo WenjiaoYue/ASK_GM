@@ -6,8 +6,8 @@
 
 	const style = {
 		title: `mx-4 text-sm`,
-		inactive: `text-white hover:text-blue-200`,
-		active: `font-medium text-blue-300 hover:text-blue-300`,
+		inactive: `text-white hover:text-sky-200`,
+		active: `font-medium text-sky-300 hover:text-sky-300`,
 		link: `flex items-center justify-start my-2 p-4 w-full`,
 		close: `lg:duration-700 lg:ease-out lg:invisible lg:opacity-0 lg:transition-all`,
 		open: `lg:duration-500 lg:ease-in lg:h-auto lg:opacity-100 lg:transition-all lg:w-auto`,

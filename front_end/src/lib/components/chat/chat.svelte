@@ -89,13 +89,13 @@
 		const translatedQuery = await chatResponse.translatedQuery(
 			knowledgeContent
 		);
+		console.log(translatedQuery);
 
 		const eventSource = chatResponse.chatMessage(
 			chatMessages,
 			type,
 			blob,
 			filename,
-			knowledgeContent,
 			translatedQuery
 		);
 		eventSource.addEventListener("error", handleError);
@@ -197,7 +197,7 @@
 			<div class="relative flex w-full items-center justify-center">
 				<!-- Textarea -->
 				<textarea
-					class="textarea textarea-bordered h-12 w-full"
+					class="textarea textarea-bordered h-12 w-full border-b-2 border-[#0753b2] text-black"
 					disabled={loading}
 					maxlength="1200"
 					bind:value={query}
@@ -226,9 +226,9 @@
 			</div>
 		</div>
 		<div class="flex justify-between">
-			<span class="text-[0.65rem] text-slate-400">
+			<span class="text-xs text-slate-400">
 				ASK GM can make mistakes. Consider checking important information.			
 			</span>
-			<span  class="text-[0.85rem]">{query.length}/1200</span></div>
+			<span>{query.length}/1200</span></div>
 	</div>
 </div>

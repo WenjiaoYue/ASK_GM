@@ -14,16 +14,8 @@
 		storageFiles,
 	} from "$lib/components/shared/shared.store";
 	import csvIcon from "$lib/assets/icons/csv.svg";
-	import {
-		Progressbar,
-		Modal,
-		Label,
-		Input,
-		Helper,
-		Button,
-	} from "flowbite-svelte";
+	import { Progressbar } from "flowbite-svelte";
 	import { Alert } from "flowbite-svelte";
-	import PasteLink from "$lib/assets/icons/paste-link.svelte";
 
 	/**
 	 * @type {string | any[]}
@@ -39,50 +31,11 @@
 	}
 
 	$: {
-		files && files.length && files.length !== $storageFiles.length
-			? filterFiles(files)
-			: null;
+		files && files.length && (files.length !== $storageFiles.length)? filterFiles(files) : null;
 	}
 
 	let uploadProgress = 0;
 	let uploadHandle: number;
-	let formModal = false;
-
-	let urlValue = "";
-
-	async function deleteFile() {
-		
-	}
-
-	async function handelPasteURL() {
-		const pasteUrlList = urlValue.split(";").map((url) => url.trim());
-		if (
-			pasteUrlList.some((el) => {
-				const regex =
-					/^([\x09\x0A\x0D\x20-\x7E]|[\xC2-\xDF][\x80-\xBF]|\xE0[\xA0-\xBF][\x80-\xBF]|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}|\xED[\x80-\x9F][\x80-\xBF]|\xF0[\x90-\xBF][\x80-\xBF]{2}|[\xF1-\xF3][\x80-\xBF]{3}|\xF4[\x80-\x8F][\x80-\xBF]{2})*$/;
-
-				return regex.test(el);
-			})
-		) {
-			addNotification({
-				text: "Please upload valid links",
-				position: "top-left",
-				type: "success",
-				removeAfter: 3000,
-			});
-			return;
-		}
-		const res = await fetchKnowledgeBaseIdByPaste(pasteUrlList);
-
-		addNotification({
-			text: "Uploaded successfully",
-			position: "top-left",
-			type: "success",
-			removeAfter: 3000,
-		});
-
-		formModal = false;
-	}
 
 	function handleUploadBegin() {
 		uploadHandle = setInterval(() => {
@@ -184,9 +137,9 @@
 <div class="flex flex-col flex-wrap sm:flex-row">
 	{#if showAlert}
 		<Alert
-			color="green"
+			color="green" 
 			class="absolute right-0 z-[30] border-t-4 border-green-600"
-			border
+			border 
 		>
 			<span class="font-medium">Uploaded successfully!</span>
 		</Alert>
@@ -202,7 +155,7 @@
 					<Progressbar
 						progress={uploadProgress.toString()}
 						size="h-1"
-						color="blue"
+						color="sky"
 						divClass="absolute top-0 w-full"
 					/>
 				{/if}
@@ -255,19 +208,7 @@
 							class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
 						>
 							<UploadDirectoryIcon />
-							Upload Folder
-						</div>
-					</button>
-					<button
-						on:click={() => (formModal = true)}
-						class="mt-6"
-						id="getDirectory"
-					>
-						<div
-							class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
-						>
-							<PasteLink />
-							Paste Link
+							Upload Directory
 						</div>
 					</button>
 				</div>
@@ -275,30 +216,14 @@
 				<div class="mt-8">
 					<div class="flex items-center">
 						<h4
-							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-indigo-600"
+							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-sky-600"
 						>
 							Your Knowledge Base
 						</h4>
 						<div class="flex-1 border-t-2 border-gray-200" />
 					</div>
 					<ul class="lg:col-gap-8 lg:row-gap-5 mt-8 lg:grid lg:grid-cols-2">
-						{#if files}
-							<div>
-								<div class="flex-shrink-0">
-									<Knowledge />
-								</div>
-								<p class="ml-3 text-sm leading-5 text-gray-700">
-									Knowledge_Base
-								</p>
-							</div>
-							<button
-								class="float-right cursor-pointer ps-2"
-								on:click={() => deleteFile()}
-							>
-								<XMarkIcon />
-							</button>
-
-							<!-- {#if files?.length}
+						{#if files?.length}
 							{#each files as file, index}
 								<li
 									class="mb-4 flex items-center lg:col-span-1"
@@ -332,19 +257,21 @@
 										</div>
 									{/if}
 								</li>
-							{/each} -->
+							{/each}
 						{:else}
-							<div>
-								<NoFile />
-								<p class="mt-2 text-sm opacity-70">No files uploaded</p>
-							</div>
+						<div>
+							<NoFile />
+							<p class="mt-2 text-sm opacity-70">No files uploaded</p>
+						</div>
+							
+							
 						{/if}
 					</ul>
 				</div>
 				<div class="mt-8">
 					<div class="flex items-center">
 						<h4
-							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-indigo-600"
+							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-sky-600"
 						>
 							Knowledge Base Library
 						</h4>
@@ -376,14 +303,14 @@
 						<img src={csvIcon} class="h-18 w-18 p-2" alt="" />
 					</div>
 					<div>
-						<p class="p-2 text-center text-lg font-bold text-gray-900">
-							Download Feedback Files
+						<p class="px-10 pt-2 text-center text-lg font-bold text-gray-900">
+							Download CSV Files
 						</p>
 					</div>
 				</div>
 				<button on:click={() => chatResponse.downloadfile()} class="mt-3">
 					<div
-						class="flex cursor-pointer items-center justify-center gap-2 rounded bg-indigo-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
+						class="flex cursor-pointer items-center justify-center gap-2 rounded bg-sky-600 p-2 px-2 text-white ring-1 hover:bg-sky-400"
 					>
 						<DownloadDirectoryIcon />
 						Download Files
@@ -393,17 +320,3 @@
 		</div>
 	</div>
 </div>
-
-<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
-	<Label class="space-y-2">
-		<span>Paste URL</span>
-		<Input type="text" name="text" placeholder="URL" bind:value={urlValue} />
-		<Helper>Use semicolons (;) to separate multiple URLs.</Helper>
-	</Label>
-
-	<Button
-		type="submit"
-		class="w-full bg-indigo-600"
-		on:click={() => handelPasteURL()}>Confirm</Button
-	>
-</Modal>
