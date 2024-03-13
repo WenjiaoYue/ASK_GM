@@ -1,28 +1,46 @@
 <script>
 	import { onMount } from "svelte";
 	import { open } from "$lib/components/shared/store";
-	import { Button, Modal, Label, Input } from "flowbite-svelte";
+	import {
+		Button,
+		Modal,
+		Label,
+		Input,
+		Dropdown,
+		DropdownItem,
+		Avatar,
+		DropdownHeader,
+		DropdownDivider,
+	} from "flowbite-svelte";
 	import { admin$ } from "$lib/components/shared/shared.store";
 	import { userLogin } from "$lib/modules/chat/network";
 	import { getNotificationsContext } from "svelte-notifications";
+	import { Icon } from "flowbite-svelte-icons";
+
 
 	let formModal = false;
+	let deleteModal = false;
 	let email = "";
 	let password = "";
 	let username = "";
+	let userInfo = {};
+	let address = "";
 
 	const { addNotification } = getNotificationsContext();
 
+	function isEmptyObject(obj) {
+		return Object.keys(obj).length === 0;
+	}
+
 	onMount(() => {
 		if (sessionStorage.getItem("userInfo")) {
-			console.log(
-				'sessionStorage.getItem("userInfo")',
-				sessionStorage.getItem("userInfo")
-			);
-			let userName = sessionStorage.getItem("userInfo");
-			if (userName) {
-				admin$.set(userName);
-				username = userName;
+			let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+			if (!isEmptyObject(userInfo)) {
+				username = userInfo.given_name;
+				address = userInfo.email_address;
+				admin$.set(username);
+			} else {
+				address = "";
 			}
 		}
 	});
@@ -32,7 +50,7 @@
 	};
 
 	function storeInSession() {
-		sessionStorage.setItem("userInfo", username);
+		sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
 	}
 
 	async function setLogin() {
@@ -43,7 +61,16 @@
 		} else {
 			const res = await userLogin(email, password);
 			if (res.msg == "Login successful") {
+				addNotification({
+					text: "login succeed",
+					position: "top-right",
+					type: "succeed",
+					removeAfter: 1000,
+				});
 				username = res.user_info.given_name;
+				userInfo = res.user_info;
+				console.log("userInfo", userInfo);
+
 				admin$.set(username);
 				storeInSession();
 			} else {
@@ -58,9 +85,10 @@
 	}
 
 	async function logout() {
+
 		username = "";
 		admin$.set("");
-		storeInSession();
+		sessionStorage.removeItem("userInfo");
 	}
 </script>
 
@@ -86,27 +114,20 @@
 				<p class="mt-2 text-xl font-bold">Intel ASK GM</p>
 			</div>
 			{#if username}
-				<p class="group relative whitespace-nowrap text-lg">
-					Hello, <span class="font-semibold">{username}</span>
-
-					<Button
-						on:click={logout}
-						class="absolute right-0 top-full hidden rounded-lg bg-indigo-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200 group-hover:flex"
-					>
-						<svg
-							class="h-6 w-6 p-1 text-white"
-							aria-hidden="true"
-							xmlns="http://www.w3.org/2000/svg"
-							fill="currentColor"
-							viewBox="0 0 14 18"
+				<!-- logout and login info -->
+				<Button pill color="light" id="avatar_with_name" class="px-4 py-1">
+					<Avatar src="/src/lib/assets/images/person.svg" class="me-2" />
+					{username}
+				</Button>
+				<Dropdown inline triggeredBy="#avatar_with_name">
+					<div slot="header" class="px-4 py-2">
+						<span class="block text-sm text-gray-900 dark:text-white"
+							>{username}</span
 						>
-							<path
-								d="M7 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm2 1H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
-							/>
-						</svg>
-						<p class="pl-1">Logout</p>
-					</Button>
-				</p>
+						<span class="block truncate text-sm font-medium">{address}</span>
+					</div>
+					<DropdownItem slot="footer" on:click={() => (deleteModal = true)}>Sign out</DropdownItem>
+				</Dropdown>
 			{:else}
 				<Button
 					on:click={() => (formModal = true)}
@@ -140,15 +161,6 @@
 	<form class="flex flex-col space-y-6" action="#">
 		<h3 class="mb-4 text-xl font-medium text-black">Sign in to Intel ASK GM</h3>
 		<Label class="space-y-2">
-			<!-- <span class="text-white">Email</span>
-			<Input
-				class="p-2"
-				type="email"
-				id="email"
-				placeholder="your@email.com"
-				required
-				bind:value={email}
-			/> -->
 			<span>Username</span>
 			<Input
 				class="p-2"
@@ -175,13 +187,25 @@
 			class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200"
 			>Login to your account</Button
 		>
-		<!-- <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-			Not registered? <a
-				href="/"
-				class="text-indigo-700 hover:underline dark:text-indigo-300"
-			>
-				Create account
-			</a>
-		</div> -->
 	</form>
+</Modal>
+
+<Modal bind:open={deleteModal} size="xs" autoclose>
+	<div class="text-center">
+		<Icon
+			name="exclamation-circle-outline"
+			class="mx-auto mb-4 h-12 w-12 text-gray-400"
+		/>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			Confirm Sign Out?
+		</h3>
+		<Button
+			color="red"
+			class="mr-2"
+			on:click={() => {
+				logout();
+			}}>Yes, I'm sure</Button
+		>
+		<Button color="alternative">No, cancel</Button>
+	</div>
 </Modal>
