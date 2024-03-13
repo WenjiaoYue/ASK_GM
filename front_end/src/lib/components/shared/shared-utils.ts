@@ -160,14 +160,16 @@ export const upsertChat = (
 
 export function scrollToBottom(scrollToDiv: HTMLElement) {
   if (scrollToDiv) {
-    scrollToDiv.scrollIntoView({
-      behavior: "auto",
-      block: "end",
-      inline: "nearest",
-    });
+      setTimeout(
+          () =>
+              scrollToDiv.scroll({
+                  behavior: "auto",
+                  top: scrollToDiv.scrollHeight,
+              }),
+          100
+      );
   }
 }
-
 export const truncateString = (str = '', cutLength = 18) => {
   const truncated = str?.substring?.(0, cutLength);
 

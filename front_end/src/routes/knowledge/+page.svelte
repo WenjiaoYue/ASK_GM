@@ -33,10 +33,7 @@
 
 	import { Alert } from "flowbite-svelte";
 	import PasteLink from "$lib/assets/icons/paste-link.svelte";
-	import { getNotificationsContext } from "svelte-notifications";
 	import { onMount } from "svelte";
-
-	const { addNotification } = getNotificationsContext();
 
 	/**
 	 * @type {string | any[]}
@@ -45,7 +42,8 @@
 	let showAlert = false;
 	let uploading = false;
 	let status = false;
-
+	let hintContent = '';
+	
 	$: files = $storageFiles ? $storageFiles : [];
 
 	$: {
@@ -75,12 +73,7 @@
 		const res = await fetchDelete();
 		if (res.status) {
 			status = false;
-			addNotification({
-				text: "delete successfully",
-				position: "top-left",
-				type: "success",
-				removeAfter: 3000,
-			});
+			showAndAutoDismissAlert('Delete Successfully');
 		}
 	}
 
@@ -94,12 +87,7 @@
 		console.log("res", res);
 		// succeed
 		if (res.status) {
-			addNotification({
-				text: "Uploaded successfully",
-				position: "top-right",
-				type: "success",
-				removeAfter: 3000,
-			});
+			showAndAutoDismissAlert('Uploaded Successfully');
 			uploading = false;
 			handleUploadEnd();
 			status = true;
@@ -114,7 +102,8 @@
 		}, 500);
 	}
 
-	function showAndAutoDismissAlert() {
+	function showAndAutoDismissAlert(hintContent:string) {
+		hintContent = hintContent;
 		showAlert = true;
 		setTimeout(() => {
 			showAlert = false;
@@ -159,12 +148,7 @@
 			try {
 				const res = await chatResponse.getKnowledgeBaseId(flattenedData);
 				if (res == "Succeed") {
-					addNotification({
-						text: "Uploaded successfully",
-						position: "top-right",
-						type: "success",
-						removeAfter: 3000,
-					});
+					showAndAutoDismissAlert('Uploaded Successfully');
 					uploading = false;
 					handleUploadEnd();
 					status = true;
@@ -177,7 +161,7 @@
 		}).then(() => {
 			console.log("handleUploadEnd");
 			handleUploadEnd();
-			showAndAutoDismissAlert();
+			showAndAutoDismissAlert('Uploaded Successfully');
 		});
 	}
 
@@ -235,7 +219,7 @@
 			class="absolute right-0 z-[30] border-t-4 border-green-600"
 			border
 		>
-			<span class="font-medium">Uploaded successfully!</span>
+			<span class="font-medium">{hintContent}</span>
 		</Alert>
 	{/if}
 	<div class="relative mx-auto mb-12 max-w-screen-xl">

@@ -87,6 +87,7 @@
 	async function handleTranslateClick() {
 		const translateResult = await chatResponse.translateFunc(message);		
 		message = translateResult.tranlated_content;
+		clickTranslate = !clickTranslate;
 	}
 
 	function removeHtmlContent(input: string): string {
@@ -224,7 +225,7 @@
 				</figure> -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<figure
-					class="h-5 w-3 cursor-pointer text-black opacity-70 hover:text-yellow-600 hover:opacity-100"
+					class="h-3 w-3 ml-1 cursor-pointer text-black opacity-70 hover:text-yellow-600 hover:opacity-100"
 					on:click={handleTranslateClick}
 				>
 					{#if clickTranslate}

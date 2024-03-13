@@ -19,6 +19,7 @@
 	import { Icon } from "flowbite-svelte-icons";
 	import Documentation from "$lib/components/documentation/Index.svelte";
 	import Question from "$lib/components/sidenavigation/icons/Question.svelte";
+	import { goto } from "$app/navigation";
 
 	let formModal = false;
 	let deleteModal = false;
@@ -75,6 +76,7 @@
 			formModal = false;
 		} else {
 			const res = await userLogin(email, password);
+
 			if (res.msg == "Login successful") {
 				addNotification({
 					text: "login succeed",
@@ -105,6 +107,7 @@
 		admin$.set("");
 		sessionStorage.removeItem("userInfo");
 		formModal = true;
+		goto("/");
 	}
 </script>
 
@@ -116,7 +119,8 @@
 			class="lg:max-w-68 relative flex w-full items-center pl-1 sm:ml-0 sm:pr-2"
 		>
 			<div class="relative left-0 flex w-full items-center">
-				<p class="mt-2 text-xl font-bold text-white">Intel ASK GM</p>
+				<p class="mt-2 text-xl font-bold text-white">
+					<a href="/">Intel ASK GM</a></p>
 			</div>
 			<Button
 				on:click={() => (helpModal = true)}
@@ -151,7 +155,7 @@
 			{:else}
 				<Button
 					on:click={() => (formModal = true)}
-					class="bg-[#2196F3] px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200"
+					class="bg-[#00469f] px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200"
 				>
 					<svg
 						class="h-6 w-6 p-1 text-white"

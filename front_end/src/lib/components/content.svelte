@@ -75,6 +75,7 @@
 								on:click={() => {
 									selectField = field;
 								}}
+								class:ring={selectField === field}
 							>
 								{field}
 							</button>

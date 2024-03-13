@@ -200,7 +200,7 @@
 			<div class="relative flex w-full items-center justify-center">
 				<!-- Textarea -->
 				<textarea
-					class="textarea textarea-bordered h-12 w-full"
+					class="textarea textarea-bordered h-12 w-full border-gray-200 border-b-2 border-b-[#00469f]"
 					disabled={loading}
 					maxlength="1200"
 					bind:value={query}
