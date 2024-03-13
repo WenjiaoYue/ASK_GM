@@ -3,9 +3,9 @@ import { SSE } from "sse.js";
 import { env } from "$env/dynamic/public";
 import { knowledge_base_id } from "$lib/components/shared/shared.store";
 import { language_map } from "$lib/common/constant";
-import sjcl from 'sjcl';
+import sjcl from "sjcl";
 
-const secretKey = "ASK_GM_PASSWORD"; 
+const secretKey = "ASK_GM_PASSWORD";
 
 const KNOWLEDGE_URL = env.KNOWLEDGE_URL;
 const TRANSLATE_URL = env.TRANSLATE_URL;
@@ -51,7 +51,7 @@ function chatMessage(
 	type: any,
 	blob?: any,
 	filename?: any,
-	question?: string,
+	question?: string
 ): SSE {
 	// chatMessage
 	const initWord =
@@ -60,8 +60,7 @@ function chatMessage(
 		return prev + `${cur.role}: ${cur.content}\n`;
 	}, initWord);
 	result += "Assistant:";
-	console.log('chatMessage');
-	
+	console.log("chatMessage");
 
 	const linkDict: { [key: string]: string } = {
 		knowledge: KNOWLEDGE_URL + "/chat",
@@ -102,8 +101,8 @@ function chatGPT(msgs: ChatMessage[], api_key: string): SSE {
 
 function userLogin(username, password) {
 	const encryptedPassword = sjcl.encrypt(secretKey, password);
-	console.log('encryptedPassword', encryptedPassword);
-	
+	console.log("encryptedPassword", encryptedPassword);
+
 	const init: RequestInit = {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
@@ -121,7 +120,7 @@ function translateFunc(msg: string) {
 	// };
 
 	const translateObject = {
-		"content": msg
+		content: msg,
 	};
 	const init: RequestInit = {
 		method: "POST",
@@ -157,13 +156,12 @@ async function fetchFunc(url, init) {
 }
 
 async function getKnowledgeBaseId(files) {
-	// console.log('10/19 ---', files, knowledge_base_id.get());
-
+	
 	const UploadKnowledge_URL = KNOWLEDGE_URL + "/append";
 	const formData = new FormData();
 
 	for (const file of files) {
-		formData.append("file", file);
+		formData.append("files", file);
 	}
 
 	formData.append("knowledge_base_id", "default");

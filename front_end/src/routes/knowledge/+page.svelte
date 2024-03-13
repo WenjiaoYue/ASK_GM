@@ -12,6 +12,11 @@
 	import XMarkIcon from "$lib/assets/icons/x-mark-icon.svelte";
 	import chatResponse from "$lib/modules/chat/network";
 	import {
+		fetchKnowledgeBaseIdByPaste,
+		fetchDelete,
+		fetchStatus,
+	} from "$lib/modules/doc/Network";
+	import {
 		knowledge_base_id,
 		storageFiles,
 	} from "$lib/components/shared/shared.store";
@@ -27,6 +32,7 @@
 	import { Alert } from "flowbite-svelte";
 	import PasteLink from "$lib/assets/icons/paste-link.svelte";
 	import { getNotificationsContext } from "svelte-notifications";
+	import { onMount } from "svelte";
 
 	const { addNotification } = getNotificationsContext();
 
@@ -57,29 +63,37 @@
 
 	let urlValue = "";
 
-	async function deleteFile() {}
+	onMount(async () => {
+		const res = await fetchStatus();
+		console.log("res fetchStatus", res.is_uploaded);
+	});
+
+	async function deleteFile() {
+		const res = await fetchDelete();
+		console.log("res", res);
+	}
 
 	async function handelPasteURL() {
 		const pasteUrlList = urlValue.split(";").map((url) => url.trim());
-		if (
-			pasteUrlList.some((el) => {
-				const regex =
-					/^([\x09\x0A\x0D\x20-\x7E]|[\xC2-\xDF][\x80-\xBF]|\xE0[\xA0-\xBF][\x80-\xBF]|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}|\xED[\x80-\x9F][\x80-\xBF]|\xF0[\x90-\xBF][\x80-\xBF]{2}|[\xF1-\xF3][\x80-\xBF]{3}|\xF4[\x80-\x8F][\x80-\xBF]{2})*$/;
+		// if (
+		// 	pasteUrlList.some((el) => {
+		// 		const regex =
+		// 			/^([\x09\x0A\x0D\x20-\x7E]|[\xC2-\xDF][\x80-\xBF]|\xE0[\xA0-\xBF][\x80-\xBF]|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}|\xED[\x80-\x9F][\x80-\xBF]|\xF0[\x90-\xBF][\x80-\xBF]{2}|[\xF1-\xF3][\x80-\xBF]{3}|\xF4[\x80-\x8F][\x80-\xBF]{2})*$/;
 
-				return regex.test(el);
-			})
-		) {
-			addNotification({
-				text: "Please upload valid links",
-				position: "top-left",
-				type: "success",
-				removeAfter: 3000,
-			});
-			return;
-		}
+		// 		return regex.test(el);
+		// 	})
+		// ) {
+		// 	addNotification({
+		// 		text: "Please upload valid links",
+		// 		position: "top-left",
+		// 		type: "success",
+		// 		removeAfter: 3000,
+		// 	});
+		// 	return;
+		// }
 		const res = await fetchKnowledgeBaseIdByPaste(pasteUrlList);
-		console.log('res', res);
-		
+		console.log("res", res);
+
 		addNotification({
 			text: "Uploaded successfully",
 			position: "top-left",
@@ -110,20 +124,32 @@
 		clearInterval(uploadHandle);
 	}
 
+	function flattenFiles(files) {
+		const flattenedData = [];
+
+		function traverse(item) {
+			if (item instanceof File) {
+				flattenedData.push(item);
+			} else if (item instanceof FileList) {
+				for (let i = 0; i < item.length; i++) {
+					flattenedData.push(item[i]);
+				}
+			} else if (item instanceof Object) {
+				Object.values(item).forEach((value) => traverse(value));
+			}
+		}
+
+		Object.values(files).forEach((item) => traverse(item));
+		return flattenedData;
+	}
+
 	async function filterFiles(files) {
 		// localStorage
 		storageFiles.set(files);
-		const flattenedData = [];
-		files.forEach((item) => {
-			if (!(item instanceof File)) {
-				for (const key in item) {
-					const values = Object.values(item[key]);
-					flattenedData.push(...Array.from(values));
-				}
-			} else {
-				flattenedData.push(item);
-			}
-		});
+		let flattenedData = [];
+		flattenedData = flattenFiles(files);
+		console.log("flattenedData", flattenedData);
+
 		// back_end
 		new Promise(async (resolve) => {
 			try {
@@ -150,7 +176,12 @@
 				[folderName]: newDirectory,
 			};
 			files.push(folderObject);
+			filterFiles(files);
 		}
+		console.log("uploadFolder", files);
+
+
+
 		return files;
 	}
 	/**
@@ -264,10 +295,7 @@
 							Upload Folder
 						</div>
 					</button>
-					<button
-						on:click={() => (formModal = true)}
-						class="mt-6"
-					>
+					<button on:click={() => (formModal = true)} class="mt-6">
 						<div
 							class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
 						>
@@ -298,7 +326,6 @@
 										<XMarkIcon />
 									</button>
 								</div>
-								
 							{:else if status && uploading}
 								<UploadKnowledge />
 							{:else}
