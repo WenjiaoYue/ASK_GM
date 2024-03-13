@@ -1,15 +1,11 @@
-import { chatServer } from "$lib/modules/chat/chat-server";
 import { SSE } from "sse.js";
 import { env } from "$env/dynamic/public";
-import { knowledge_base_id } from "$lib/components/shared/shared.store";
-import { language_map } from "$lib/common/constant";
 import sjcl from "sjcl";
 
 const secretKey = "ASK_GM_PASSWORD";
 
 const KNOWLEDGE_URL = env.KNOWLEDGE_URL;
 const TRANSLATE_URL = env.TRANSLATE_URL;
-const DETECT_URL = env.DETECT_URL;
 const DOWNLOAD_FEEDBACK_URL = env.DOWNLOAD_FEEDBACK_URL;
 const LOGIN_URL = env.LOGIN_URL;
 
@@ -27,24 +23,7 @@ function regFunc(currentMsg) {
 	return content;
 }
 
-async function translatedQuery(knowledgeContent: string) {
-	const detectLang = await detectFunc(knowledgeContent);
-	let sourceLanguage = "";
-	let translateResult = "";
-	let queryMessage = knowledgeContent;
-	console.log(detectLang);
 
-	if (detectLang) {
-		sourceLanguage = detectLang.data.detections[0][0].language;
-	}
-
-	if (sourceLanguage === "zh-CN") {
-		translateResult = await translateFunc(knowledgeContent, "en");
-		queryMessage = translateResult.data.translations[0].translatedText;
-	}
-
-	return queryMessage;
-}
 
 function chatMessage(
 	chatMessages: ChatMessage[],
@@ -85,19 +64,6 @@ function chatMessage(
 	return eventSource;
 }
 
-function chatGPT(msgs: ChatMessage[], api_key: string): SSE {
-	return new SSE("https://api.openai.com/v1/chat/completions", {
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: "Bearer " + api_key,
-		},
-		payload: JSON.stringify({
-			model: "gpt-3.5-turbo",
-			messages: msgs,
-			stream: true,
-		}),
-	});
-}
 
 function userLogin(username, password) {
 	const encryptedPassword = sjcl.encrypt(secretKey, password);
@@ -112,13 +78,7 @@ function userLogin(username, password) {
 	return fetchFunc(LOGIN_URL, init);
 }
 
-function translateFunc(msg: string) {
-	// let translateObject = {
-	// 	key: "AIzaSyD4m9izGcZnv55l27ZvlymdmNsGK7ri_Gg",
-	// 	q: msg,
-	// 	target: target,
-	// };
-
+async function translateFunc(msg: string) {
 	const translateObject = {
 		content: msg,
 	};
@@ -127,20 +87,9 @@ function translateFunc(msg: string) {
 		body: JSON.stringify(translateObject),
 	};
 
-	return fetchFunc(TRANSLATE_URL, init);
+	return await fetchFunc(TRANSLATE_URL, init);
 }
-async function detectFunc(msg: string) {
-	let translateObject = {
-		key: "AIzaSyD4m9izGcZnv55l27ZvlymdmNsGK7ri_Gg",
-		q: msg,
-	};
-	const init: RequestInit = {
-		method: "POST",
-		body: JSON.stringify(translateObject),
-	};
 
-	return await fetchFunc(DETECT_URL, init);
-}
 
 async function fetchFunc(url, init) {
 	try {
@@ -191,14 +140,10 @@ async function downloadfile() {
 }
 
 export default {
-	modelList: chatServer.modelList,
 	chatMessage,
-	chatGPT,
 	regFunc,
 	translateFunc,
-	detectFunc,
 	getKnowledgeBaseId,
-	translatedQuery,
 	downloadfile,
 };
 
