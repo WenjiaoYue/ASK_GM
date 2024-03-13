@@ -68,7 +68,7 @@
 					<div
 						class="my-4 flex flex-row flex-wrap items-center justify-start gap-x-2 gap-y-2"
 					>
-						{#each labelList as { content: field }}
+						{#each labelList as { content: field }, i}
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
 							<button
 								class="rounded-md px-4 py-1 text-xs font-semibold bg-sky-100 text-sky-500"

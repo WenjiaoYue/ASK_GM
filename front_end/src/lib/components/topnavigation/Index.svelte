@@ -11,6 +11,7 @@
 		Avatar,
 		DropdownHeader,
 		DropdownDivider,
+		
 	} from "flowbite-svelte";
 	import { admin$ } from "$lib/components/shared/shared.store";
 	import { userLogin } from "$lib/modules/chat/network";
@@ -35,8 +36,13 @@
 	}
 
 	onMount(() => {
+		console.log('getItem("userInfo")', sessionStorage.getItem("userInfo"));
+
 		if (sessionStorage.getItem("userInfo")) {
 			let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+
+			console.log("userInfo", userInfo);
+
 			if (!isEmptyObject(userInfo)) {
 				username = userInfo.given_name;
 				address = userInfo.email_address;
@@ -44,6 +50,8 @@
 			} else {
 				address = "";
 			}
+		} else {
+			formModal = true;
 		}
 	});
 
@@ -59,7 +67,12 @@
 		if (email === "admin" && password === "admin") {
 			admin$.set("admin");
 			username = "admin";
+			userInfo = {
+				given_name: "admin",
+				email_address: "admin",
+			};
 			storeInSession();
+			formModal = false;
 		} else {
 			const res = await userLogin(email, password);
 			if (res.msg == "Login successful") {
@@ -70,9 +83,10 @@
 					removeAfter: 1000,
 				});
 				username = res.user_info.given_name;
+				address = res.user_info.email_address;
 				userInfo = res.user_info;
 				console.log("userInfo", userInfo);
-
+				formModal = false;
 				admin$.set(username);
 				storeInSession();
 			} else {
@@ -90,6 +104,7 @@
 		username = "";
 		admin$.set("");
 		sessionStorage.removeItem("userInfo");
+		formModal = true;
 	}
 </script>
 
@@ -116,7 +131,7 @@
 					<Avatar src="/src/lib/assets/images/person.svg" class="me-2" />
 					{username}
 				</Button>
-				<Dropdown inline triggeredBy="#avatar_with_name">
+				<Dropdown inline triggeredBy="#avatar_with_name" class="w-50">
 					{#if username !== "admin"}
 						<div class="px-4 py-2">
 							<span class="block text-sm text-gray-900 dark:text-white"
@@ -125,12 +140,9 @@
 							<span class="block truncate text-sm font-medium">{address}</span>
 						</div>
 					{:else}
-						<DropdownItem>
-							<a href="/">Index</a></DropdownItem
-						>
-						<DropdownItem>
-							<a href="/knowledge">Knowledge</a></DropdownItem
-						>
+						<DropdownItem href="/">Index</DropdownItem>
+						<DropdownDivider />
+						<DropdownItem href="/knowledge">Database Management</DropdownItem>
 					{/if}
 					<DropdownItem slot="footer" on:click={() => (deleteModal = true)}
 						>Sign out</DropdownItem
@@ -159,44 +171,50 @@
 	</div>
 </header>
 
-<Modal
-	bind:open={formModal}
-	size="xs"
-	autoclose={true}
-	class="z-50 w-full p-10"
-	outsideclose
->
-	<form class="flex flex-col space-y-6" action="#">
-		<h3 class="mb-4 text-xl font-medium text-black">Sign in to Intel ASK GM</h3>
-		<Label class="space-y-2">
-			<span>Username</span>
-			<Input
-				class="p-2"
-				type="text"
-				placeholder="username"
-				required
-				bind:value={email}
-			/>
-		</Label>
-		<Label class="space-y-2">
-			<span>Your password</span>
-			<Input
-				class="p-2"
-				type="password"
-				id="password"
-				placeholder="•••••"
-				required
-				bind:value={password}
-			/>
-		</Label>
-		<Button
-			on:click={() => setLogin()}
-			type="submit"
-			class="w-full rounded-lg bg-blue-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200"
-			>Login to your account</Button
-		>
-	</form>
-</Modal>
+{#if formModal}
+	<div
+		id="popup-modal"
+		tabindex="-1"
+		class="fixed left-0 right-0 top-0 z-50 flex h-screen items-center justify-center overflow-y-auto overflow-x-hidden bg-black bg-opacity-30"
+	>
+		<div class="relative max-h-full w-full max-w-md p-4">
+			<div class="relative rounded-lg bg-white shadow dark:bg-gray-700">
+				<form class="flex flex-col space-y-6 p-10" action="#">
+					<h3 class="mb-4 text-xl font-medium text-black">
+						Sign in to Intel ASK GM
+					</h3>
+					<Label class="space-y-2">
+						<span>Username</span>
+						<Input
+							class="p-2"
+							type="text"
+							placeholder="username"
+							required
+							bind:value={email}
+						/>
+					</Label>
+					<Label class="space-y-2">
+						<span>Your password</span>
+						<Input
+							class="p-2"
+							type="password"
+							id="password"
+							placeholder="•••••"
+							required
+							bind:value={password}
+						/>
+					</Label>
+					<Button
+						on:click={() => setLogin()}
+						type="submit"
+						class="w-full rounded-lg bg-blue-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200"
+						>Login to your account</Button
+					>
+				</form>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <Modal bind:open={deleteModal} size="xs" autoclose>
 	<div class="text-center">

@@ -36,6 +36,8 @@
 	onMount(async () => {
 		scrollToDiv = document
 		?.querySelector(".chat-scrollbar")!;
+		console.log('scrollToDiv', scrollToDiv);
+		
 		});
 
 	$: enableRegenerateMessage = !loading && chatMessages.length > 2;
@@ -54,7 +56,8 @@
 	}
 
 	const handleSubmit = async (enableRegenerate: boolean): Promise<void> => {
-		
+		console.log('scrollToDiv', scrollToDiv);
+
 		scrollToBottom(scrollToDiv);
 		let queryContent = query;
 		query = "";
@@ -232,3 +235,4 @@
 			<span  class="text-[0.85rem]">{query.length}/1200</span></div>
 	</div>
 </div>
+
