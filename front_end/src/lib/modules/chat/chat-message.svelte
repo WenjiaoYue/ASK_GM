@@ -5,16 +5,13 @@
 	import DislikeButtonIcon from "$lib/assets/icons/dislikeButtonIcon.svelte";
 	import ActiveDislikeButtonIcon from "$lib/assets/icons/ActiveDislikeButtonIcon.svelte";
 	import ActiveLikeButtonIcon from "$lib/assets/icons/ActiveLikeButtonIcon.svelte";
-	import TextToImgButtonIcon from "$lib/assets/icons/text2imgButtonIcon.svelte";
 	import TranslateIcon from "$lib/assets/icons/translateIcon.svelte";
 	import { env } from "$env/dynamic/public";
 	import { createEventDispatcher } from "svelte";
 	import { scrollToBottom } from "$lib/components/shared/shared-utils";
 	import chatResponse from "$lib/modules/chat/network";
-	import { language_map } from "$lib/common/constant";
-	import { Button, Checkbox, Input, Label, Modal } from "flowbite-svelte";
+	import { Checkbox, Modal } from "flowbite-svelte";
 	import NoTranslate from "$lib/assets/icons/NoTranslate.svelte";
-	import ActiveText2Img from "$lib/assets/icons/activeText2Img.svelte";
 
 	let formModal = false;
 	let clickLike = false;
@@ -57,32 +54,6 @@
 		}
 	}
 
-	function typewriter(node: HTMLElement, { speed = 5 }) {
-		const valid =
-			node.childNodes.length === 1 &&
-			node.childNodes[0].nodeType === Node.TEXT_NODE;
-
-		if (!valid) {
-			throw new Error(
-				`This transition only works on elements with a single text node child`
-			);
-		}
-
-		const text = node.textContent;
-		const duration = text.length / (speed * 0.06);
-		scrollToBottom(scrollToDiv);
-
-		return {
-			duration,
-			tick: (t) => {
-				const i = Math.trunc(text.length * t);
-				node.textContent = text.slice(0, i);
-				if (t === 1) {
-					dispatch("push");
-				}
-			},
-		};
-	}
 
 	async function handleTranslateClick() {
 		const translateResult = await chatResponse.translateFunc(message);		
@@ -130,32 +101,7 @@
 		return response === "Succeed";
 	}
 
-	async function handleImgClick() {
-		if (showImg == true) {
-			showImg = false;
-			return;
-		}
-		const url = env.TXT2IMG;
 
-		imgPromise = (async () => {
-			const init: RequestInit = {
-				method: "POST",
-				// mode: 'no-cors',
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					prompt: message,
-					steps: 25,
-					guidance_scale: 7.5,
-					seed: 42,
-					token: "intel_sd_bf16_112233",
-				}),
-			};
-			let response = await fetch(url, init);
-			return (await response.json()).img_str;
-		})();
-
-		showImg = true;
-	}
 </script>
 
 <div
@@ -212,17 +158,6 @@
 						<DislikeButtonIcon />
 					{/if}
 				</figure>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- <figure
-					class="ml-1 h-5 w-5 cursor-pointer text-black hover:text-yellow-600 hover:opacity-100"
-					on:click={handleImgClick}
-				>
-					{#if showImg}
-						<ActiveText2Img />
-					{:else}
-						<TextToImgButtonIcon />
-					{/if}
-				</figure> -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<figure
 					class="h-3 w-3 ml-1 cursor-pointer text-black opacity-70 hover:text-yellow-600 hover:opacity-100"
