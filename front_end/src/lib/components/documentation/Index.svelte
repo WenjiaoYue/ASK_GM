@@ -3,11 +3,14 @@
 		{ content: "Related Question Guidance." },
 		{ content: "Question and Answer History." },
 		{ content: "Introduction to Hot Topics." },
-		{ content: "Generating Images Based on Current Text." },
 		{ content: "Real-time question and answer dialogue." },
 	];
 
-	let notIncludeList = [{ content: "Technical Field Q&A." }];
+	let notIncludeList = [{ content: "Multi-modal Q&A." }];
+
+	import { createEventDispatcher } from "svelte";
+
+	let dispatch = createEventDispatcher();
 </script>
 
 <div
@@ -62,7 +65,7 @@
 				<h4
 					class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-sky-600"
 				>
-					&amp; What&#x27;s not
+					Upcoming Features
 				</h4>
 				<div class="flex-1 border-t-2 border-gray-200" />
 			</div>
@@ -107,14 +110,15 @@
 		</p>
 		<div class="mt-6">
 			<div class="rounded-md shadow">
-				<a href="https://askintel.intel.com/" target="_blank">
-					<button
-						type="button"
-						class="w-full rounded-lg bg-sky-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-sky-200"
-					>
-						More Information
-					</button></a
+				<button
+					type="button"
+					on:click={() => {
+						dispatch("linkToASKIntel");
+					}}
+					class="w-full rounded-lg bg-sky-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-sky-200"
 				>
+					More Information
+				</button>
 			</div>
 		</div>
 	</div>

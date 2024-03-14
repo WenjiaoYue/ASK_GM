@@ -34,6 +34,10 @@
 		return Object.keys(obj).length === 0;
 	}
 
+	function handleLinkTo() {
+		window.open('https://askintel.intel.com/', '_blank');
+	}
+
 	onMount(() => {
 		console.log('getItem("userInfo")', sessionStorage.getItem("userInfo"));
 
@@ -239,5 +243,5 @@
 </Modal>
 
 <Modal bind:open={helpModal} size="xl" autoclose={true} outsideclose>
-	<Documentation />
+	<Documentation on:linkToASKIntel={() => handleLinkTo()}/>
 </Modal>

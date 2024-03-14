@@ -131,7 +131,7 @@
       />
     {:else}
       <span
-        class="w-28 text-left overflow-hidden whitespace-nowrap truncate "
+        class="md:w-16 xl:w-28 text-left overflow-hidden whitespace-nowrap truncate "
         {title}
       >
         {truncateString(title)}

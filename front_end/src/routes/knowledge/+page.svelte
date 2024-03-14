@@ -247,7 +247,7 @@
 					We can provide customized answers to your questions based on the
 					content you have uploaded.
 				</p>
-				<div class="flex flex-row-reverse gap-5">
+				<div class="flex flex-row gap-5">
 					<input
 						bind:files={newFiles}
 						type="file"

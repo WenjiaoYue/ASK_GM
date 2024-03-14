@@ -143,7 +143,7 @@
 	<meta name="description" content="Neural Chat" />
 </svelte:head>
 
-<div class="flex h-full w-full flex-col p-10 py-4">
+<div class="flex h-full w-full flex-col md:p-4 xl:p-10">
 	<div
 		class="carousel carousel-vertical chat-scrollbar flex h-0 flex-grow flex-col overflow-auto p-4"
 	>

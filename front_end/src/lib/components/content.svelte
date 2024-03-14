@@ -28,9 +28,9 @@
 
 <div class="flex h-full">
 	<div
-		class="carousel carousel-vertical w-0 overflow-auto sm:w-0 md:w-0 xl:mr-4 xl:w-1/5"
+		class="carousel carousel-vertical w-0 overflow-auto sm:w-0 md:w-1/5 xl:mr-4 xl:w-1/5"
 	>
-		<div class="h-full rounded-2xl">
+		<div class="h-full rounded-2xl bg-white">
 			<div class="flex items-center justify-between p-4">
 				<p class="text-md font-bold text-black">History</p>
 			</div>
@@ -40,7 +40,7 @@
 		</div>
 	</div>
 	<div
-		class="h-full w-full rounded-lg bg-white px-6  sm:w-full xl:w-2/3"
+		class="h-full w-full rounded-lg bg-white xl:px-6 sm:w-2/3 sm:px-0"
 	>
 		{#key currentChatID}
 			<Chat bind:chatId={currentChatID} bind:selectedContent={selectedContent} />
