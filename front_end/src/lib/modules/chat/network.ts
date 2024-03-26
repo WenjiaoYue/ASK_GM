@@ -75,6 +75,9 @@ function userLogin(username, password) {
 		body: JSON.stringify({ account: username, password: encryptedPassword }),
 	};
 
+	return {msg: "Login successful", user_info: {
+		given_name: 1
+	}}
 	return fetchFunc(LOGIN_URL, init);
 }
 

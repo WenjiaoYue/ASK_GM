@@ -4,10 +4,9 @@
 	import Knowledge from "$lib/assets/icons/Knowledge.svelte";
 	import UploadKnowledge from "$lib/assets/icons/upoadKnowledge.svelte";
 	import AdminKnowledge from "$lib/assets/icons/adminKnowledge.svelte";
+	import DocCard from "$lib/components/doc_management/docCard.svelte";
 	import NoFile from "$lib/assets/icons/no-file.svelte";
 	import Folder from "$lib/assets/icons/Folder.svelte";
-	import UploadDirectoryIcon from "$lib/assets/icons/upload-directory.svelte";
-	import UploadFilesIcon from "$lib/assets/icons/upload-files.svelte";
 	import DownloadDirectoryIcon from "$lib/assets/icons/download-directory.svelte";
 	import XMarkIcon from "$lib/assets/icons/x-mark-icon.svelte";
 	import chatResponse from "$lib/modules/chat/network";
@@ -32,8 +31,10 @@
 	import { Icon } from "flowbite-svelte-icons";
 
 	import { Alert } from "flowbite-svelte";
-	import PasteLink from "$lib/assets/icons/paste-link.svelte";
+	import PasteLink from "$lib/components/doc_management/pasteLink.svelte";
 	import { onMount } from "svelte";
+	import UploadFolder from "$lib/components/doc_management/uploadFolder.svelte";
+	import UploadFiles from "$lib/components/doc_management/uploadFile.svelte";
 
 	/**
 	 * @type {string | any[]}
@@ -42,8 +43,8 @@
 	let showAlert = false;
 	let uploading = false;
 	let status = false;
-	let hintContent = '';
-	
+	let hintContent = "";
+
 	$: files = $storageFiles ? $storageFiles : [];
 
 	$: {
@@ -59,10 +60,6 @@
 
 	let uploadProgress = 0;
 	let uploadHandle: number;
-	let formModal = false;
-	let deleteModal = false;
-
-	let urlValue = "";
 
 	onMount(async () => {
 		const res = await fetchStatus();
@@ -73,24 +70,7 @@
 		const res = await fetchDelete();
 		if (res.status) {
 			status = false;
-			showAndAutoDismissAlert('Delete Successfully');
-		}
-	}
-
-	async function handelPasteURL() {
-		const pasteUrlList = urlValue.split(";").map((url) => url.trim());
-		uploading = true;
-		formModal = false;
-		handleUploadBegin();
-
-		const res = await fetchKnowledgeBaseIdByPaste(pasteUrlList);
-		console.log("res", res);
-		// succeed
-		if (res.status) {
-			showAndAutoDismissAlert('Uploaded Successfully');
-			uploading = false;
-			handleUploadEnd();
-			status = true;
+			showAndAutoDismissAlert("Delete Successfully");
 		}
 	}
 
@@ -102,7 +82,7 @@
 		}, 500);
 	}
 
-	function showAndAutoDismissAlert(hintContent:string) {
+	function showAndAutoDismissAlert(hintContent: string) {
 		hintContent = hintContent;
 		showAlert = true;
 		setTimeout(() => {
@@ -148,7 +128,7 @@
 			try {
 				const res = await chatResponse.getKnowledgeBaseId(flattenedData);
 				if (res == "Succeed") {
-					showAndAutoDismissAlert('Uploaded Successfully');
+					showAndAutoDismissAlert("Uploaded Successfully");
 					uploading = false;
 					handleUploadEnd();
 					status = true;
@@ -161,7 +141,7 @@
 		}).then(() => {
 			console.log("handleUploadEnd");
 			handleUploadEnd();
-			showAndAutoDismissAlert('Uploaded Successfully');
+			showAndAutoDismissAlert("Uploaded Successfully");
 		});
 	}
 
@@ -255,52 +235,29 @@
 						id="getFile"
 						multiple
 					/>
-					<button
-						on:click={() => addKnowledgeFiles()}
-						id="getFile"
-						class="mt-6"
-					>
+					
 						<div
 							class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
 						>
-							<UploadFilesIcon />
-							Upload Files
-						</div>
-					</button>
+						<UploadFiles />
 
-					<input
-						bind:files={newDirectory}
-						type="file"
-						id="getDirectory"
-						webkitdirectory
-						directory
-						multiple
-						class="hidden"
-					/>
-					<button
-						on:click={() => addKnowledgeDirectory()}
-						class="mt-6"
-						id="getDirectory"
+						</div>
+
+					
+						<div
+							class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
+						>
+							<UploadFolder />
+						</div>
+					<div
+						class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
 					>
-						<div
-							class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
-						>
-							<UploadDirectoryIcon />
-							Upload Folder
-						</div>
-					</button>
-					<button on:click={() => (formModal = true)} class="mt-6">
-						<div
-							class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
-						>
-							<PasteLink />
-							Paste Link
-						</div>
-					</button>
+						<PasteLink />
+					</div>
 				</div>
 
 				<div class="mt-8">
-					<div class="flex items-center">
+					<div class="mt-4 flex items-center">
 						<h4
 							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-blue-600"
 						>
@@ -308,32 +265,22 @@
 						</h4>
 						<div class="flex-1 border-t-2 border-gray-200" />
 					</div>
-					<div>
-						<div class="m-2 flex items-center justify-center">
-							{#if status && !uploading}
-								<div class="relative p-2 pr-4">
-									<AdminKnowledge />
-									<button
-										class="absolute right-0 top-0 cursor-pointer"
-										on:click={() => {
-											deleteModal = true;
-										}}
-									>
-										<XMarkIcon />
-									</button>
-								</div>
-							{:else if status && uploading}
+					<div class="my-4 flex items-center justify-start">
+						<!-- {#if status && !uploading} -->
+						<!-- upload Knowledge Info -->
+						<DocCard />
+						<!-- {:else if status && uploading}
 								<div class="animate-spin">
 									<UploadKnowledge />
 								</div>
 							{:else}
 								<NoFile />
 								<p class="mt-2 text-sm opacity-70">No files uploaded</p>
-							{/if}
-						</div>
+							
+							{/if} -->
 					</div>
 				</div>
-				<div class="mt-8">
+				<div>
 					<div class="flex items-center">
 						<h4
 							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-blue-600"
@@ -385,37 +332,3 @@
 		</div>
 	</div>
 </div>
-
-<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
-	<Label class="space-y-2">
-		<span>Paste URL</span>
-		<Input type="text" name="text" placeholder="URL" bind:value={urlValue} />
-		<Helper>Use semicolons (;) to separate multiple URLs.</Helper>
-	</Label>
-
-	<Button
-		type="submit"
-		class="w-full bg-blue-600"
-		on:click={() => handelPasteURL()}>Confirm</Button
-	>
-</Modal>
-
-<Modal bind:open={deleteModal} size="xs" autoclose>
-	<div class="text-center">
-		<Icon
-			name="exclamation-circle-outline"
-			class="mx-auto mb-4 h-12 w-12 text-gray-400"
-		/>
-		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-			Confirm Delete Knowledge Base?
-		</h3>
-		<Button
-			color="red"
-			class="mr-2"
-			on:click={() => {
-				deleteFile();
-			}}>Yes, I'm sure</Button
-		>
-		<Button color="alternative">No, cancel</Button>
-	</div>
-</Modal>
