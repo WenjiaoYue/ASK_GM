@@ -43,9 +43,9 @@
 		hintStart.set(true);
 		needRecreate.set(true);
 
-		// const res = await deleteFiles(node.id);
+		const res = await deleteFiles(node.id);
 		// succeed
-		// if (res.status) {
+		if (res.status) {
 		const currentFolder = $storageFiles[currentIdx];
 		if (currentFolder && currentFolder.children) {
 			currentFolder.children = currentFolder.children.filter(
@@ -56,7 +56,7 @@
 		console.log("delete $storageFiles", $storageFiles);
 		hintStart.set(false);
 		hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
-		// }
+		}
 	}
 </script>
 

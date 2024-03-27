@@ -26,13 +26,13 @@
 		hintStart.set(true);
 		needRecreate.set(true);
 
-		// const res = await deleteFiles(path);
+		const res = await deleteFiles(path);
 		// succeed
-		// if (res.status) {
+		if (res.status) {
 		$storageFiles = $storageFiles.filter((_, index) => index !== idx);
 		hintStart.set(false);
 		hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
-		// }
+		}
 	}
 </script>
 

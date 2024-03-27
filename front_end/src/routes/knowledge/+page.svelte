@@ -8,6 +8,7 @@
 	import NoFile from "$lib/assets/icons/no-file.svelte";
 	import Folder from "$lib/assets/icons/Folder.svelte";
 	import DownloadDirectoryIcon from "$lib/assets/icons/download-directory.svelte";
+	import LoadingButton from "$lib/assets/icons/loading-button-spinner-icon.svelte";
 	import XMarkIcon from "$lib/assets/icons/x-mark-icon.svelte";
 	import chatResponse from "$lib/modules/chat/network";
 	import DeleteAll from "$lib/assets/DocManagement/DeleteAll.svelte";
@@ -26,7 +27,7 @@
 		knowledge_base_id,
 		storageFiles,
 		needRecreate,
-		displayHintRecreate
+		displayHintRecreate,
 	} from "$lib/components/shared/shared.store";
 	import csvIcon from "$lib/assets/icons/csv.svg";
 	import { Progressbar, Tooltip } from "flowbite-svelte";
@@ -61,16 +62,15 @@
 			: null;
 	}
 
-
 	const hideHintAfterDelay = () => {
-        setTimeout(() => {
-            displayHintRecreate.set(false);
-        }, 3000); 
-    };
+		setTimeout(() => {
+			displayHintRecreate.set(false);
+		}, 3000);
+	};
 
-	
 	let uploadProgress = 0;
 	let uploadHandle: number;
+	let reCreating = false;
 
 	onMount(async () => {
 		const res = await fetchAllFile();
@@ -108,8 +108,10 @@
 	}
 
 	async function reCreateKb() {
+		reCreating = true;
 		const res = await fetchReCreateKB();
 		if (res.status) {
+			reCreating = false;
 			// notification
 			showAndAutoDismissAlert("Recreate Successfully");
 
@@ -297,14 +299,26 @@
 							{#if $displayHintRecreate}
 								<HintRecreate />
 							{/if}
-							<button id="hint-recreate" on:click={reCreateKb} class="mt-3">
-								<div
-									class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
-								>
-									<RecreateIcon />
-									Recreate Knowledge Base
-								</div>
-							</button>
+							{#if reCreating}
+								<button id="hint-recreate" class="mt-3">
+									<div
+										class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-400 p-2 px-2 text-white ring-1"
+									>
+										<LoadingButton />
+										Recreate Knowledge Base
+									</div>
+								</button>
+							{:else}
+								<button id="hint-recreate" on:click={reCreateKb} class="mt-3">
+									<div
+										class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
+									>
+										<RecreateIcon />
+										Recreate Knowledge Base
+									</div>
+								</button>
+							{/if}
+
 							<Tooltip triggeredBy="#hint-recreate">
 								Need takes a few minutes. Please choose a suitable time.
 							</Tooltip>
@@ -365,12 +379,12 @@
 			<div
 				class="flex flex-col justify-center gap-4 rounded-r-lg bg-white px-16 py-8"
 			>
-				<div class="flex items-center justify-center gap-2">
+				<div class="flex flex-col items-center justify-center gap-2">
 					<div class="rounded-lg bg-gray-200 py-1">
 						<img src={csvIcon} class="h-18 w-18 p-2" alt="" />
 					</div>
 					<div>
-						<p class="p-2 text-center text-lg font-bold text-gray-900">
+						<p class="truncate p-2 text-center text-lg font-bold text-gray-900">
 							Download Feedback Files
 						</p>
 					</div>
