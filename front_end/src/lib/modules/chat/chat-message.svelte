@@ -195,7 +195,7 @@
 
 <Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
 	<div
-		class="flex items-center justify-between border-b border-black/10 pb-5 dark:border-white/10"
+		class="flex items-center justify-between border-b border-black/10 pb-5"
 	>
 		<div class="flex items-center">
 			<div

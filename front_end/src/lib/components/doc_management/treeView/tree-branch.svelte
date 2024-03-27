@@ -1,5 +1,6 @@
 <script lang="ts">
 	import DeleteIcon from "$lib/assets/DocManagement/deleteIcon.svelte";
+	import { storageFiles } from "$lib/components/shared/shared.store";
 	import TreeNode from "./tree-node.svelte";
 	import { createEventDispatcher } from "svelte";
 
@@ -16,6 +17,14 @@
 
 	export let currentIdx;
 
+	function changeData() {
+		console.log('change', $storageFiles);
+		
+		data = $storageFiles[currentIdx].children;
+	}
+ 
+	$: $storageFiles ? changeData() : console.log('No change', $storageFiles);
+
 	console.log(data);
 </script>
 
@@ -26,12 +35,12 @@
 			{collapse}
 			{onClick}
 			{currentIdx}
-
-			on:deleteToTree={(event) => {
-                const { node, currentIdx } = event.detail;
-                dispatch('deleteToSvelte', { node, currentIdx });
-			}}
 		/>
+		
+		<!-- on:deleteToTree={(event) => {
+			const { node, currentIdx } = event.detail;
+			dispatch('deleteToSvelte', { node, currentIdx });
+		}} -->
 	{/each}
 {:else}
 	<p>Folder is empty. Please upload a file.</p>

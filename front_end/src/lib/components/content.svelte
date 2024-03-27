@@ -59,7 +59,7 @@
 								<span class="text-md ml-2 font-bold text-black"
 									>Q&A</span
 								>
-								<span class="ml-2 text-sm text-gray-500 dark:text-white"
+								<span class="ml-2 text-sm text-gray-500"
 									>How can I help you?</span
 								>
 							</div>

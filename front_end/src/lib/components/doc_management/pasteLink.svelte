@@ -9,7 +9,6 @@
 
 	async function handelPasteURL() {
 		// path
-		// root/某file
 		const pasteUrlList = urlValue.split(";").map((url) => url.trim());
 		formModal = false;
 

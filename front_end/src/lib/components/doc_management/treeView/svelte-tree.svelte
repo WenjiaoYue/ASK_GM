@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AddNew from "./add-new.svelte";
+	import { storageFiles } from "$lib/components/shared/shared.store";
 	import TreeBranch from "./tree-branch.svelte";
 	import { createEventDispatcher } from "svelte";
 
@@ -17,7 +17,7 @@
 		data: IData[] = [],
 		onClick = "";
 
-
+	
 	
 </script>
 
@@ -25,11 +25,12 @@
 	{#if data && data.length > 0}
 		<ul>
 			<TreeBranch {data} {collapse} {onClick} {currentIdx}
-			on:deleteToSvelte={(event) => {
+			
+			/>
+			<!-- on:deleteToSvelte={(event) => {
                 const { node, currentIdx } = event.detail;
                 dispatch('deleteToSvelteCard', { node, currentIdx });
-			}}
-			/>
+			}} -->
 		</ul>
 	{:else}
 		<p>Folder is empty. Please upload a file.</p>

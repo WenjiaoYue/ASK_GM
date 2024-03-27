@@ -17,7 +17,7 @@
 		deleteFiles,
 		fetchAllFile,
 		deleteAll,
-		fetchReCreateKB
+		fetchReCreateKB,
 	} from "$lib/modules/doc/network";
 	import {
 		knowledge_base_id,
@@ -82,8 +82,6 @@
 			showAndAutoDismissAlert("Delete Successfully");
 		}
 	}
-
-
 
 	function handleUploadBegin() {
 		uploadHandle = setInterval(() => {
@@ -202,7 +200,6 @@
 
 	let Library = [{ content: "Intel ZiZhu Q&A." }];
 
-
 	/**
 	 * @param {any} name
 	 * @param {number} index
@@ -210,24 +207,6 @@
 	function removeFile(name, index) {
 		files.splice(index, 1);
 		files = files;
-	}
-
-	async function deleteSubFolder(e) {
-		const { node, currentIdx } = e.detail;
-		console.log("node", node);
-
-		const res = await deleteFiles(node.id);
-		// succeed
-		if (res.status) {
-			const currentFolder = $storageFiles[currentIdx];
-			if (currentFolder && currentFolder.children) {
-				currentFolder.children = currentFolder.children.filter(
-					(child) => child.id !== node.id
-				);
-				storageFiles.set($storageFiles);
-			}
-			console.log("$storageFiles", $storageFiles);
-		}
 	}
 </script>
 
@@ -299,7 +278,7 @@
 								class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
 							>
 								<RecreateIcon />
-								Recreate Knowledge Base 
+								Recreate Knowledge Base
 							</div>
 						</button>
 
@@ -312,14 +291,14 @@
 							</div>
 						</button>
 					</div>
-					<div class="my-4 flex items-center justify-start">
+					<div class="my-4 mb-6 flex items-center justify-start">
 						<!-- {#if status && !uploading} -->
 						<!--  Knowledge Info -->
 						{#if files.length > 0}
-							<DocCard {files} on:deleteToMain={deleteSubFolder} />
+							<DocCard {files} />
 						{:else}
 							<NoFile />
-							<p class="mt-2 text-sm opacity-70">No files uploaded</p>
+							<p class=" text-sm opacity-70">No files uploaded</p>
 						{/if}
 						<!-- {:else if status && uploading}
 								<div class="animate-spin">

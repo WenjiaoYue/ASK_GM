@@ -62,8 +62,8 @@
 			const { root, filesList } = fileListToObject(newDirectory);
 			console.log("root", root, filesList);
 
-			const res = await getKnowledgeBaseId(newDirectory, filesList);
-			if (res === "Succeed") {
+			// const res = await getKnowledgeBaseId(newDirectory, filesList);
+			// if (res === "Succeed") {
 				if ($parentIdx === -1) {
 					storageFiles.update((files) => [...files, root]);
 				} else {
@@ -71,7 +71,7 @@
 					files[$parentIdx].children.push(root);
 					$storageFiles = files;
 				}
-			}
+			// }
 		}
 	}
 </script>

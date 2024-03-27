@@ -40,27 +40,28 @@
 	outsideclose
 >
 	<AppendKb path={chooseDir} {currentIdx} />
-
+	<hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 	<SvelteTree
 		data={chooseDir.children}
 		{currentIdx}
-		on:deleteToSvelteCard={(event) => {
-			const { node, currentIdx } = event.detail;
-			dispatch('deleteToMain', { node, currentIdx });
-		}}
+		
 	/>
+	<!-- on:deleteToSvelteCard={(event) => {
+		const { node, currentIdx } = event.detail;
+		dispatch('deleteToMain', { node, currentIdx });
+	}} -->
 </Modal>
 
 <div class="grid grid-cols-7 gap-5">
 	{#each files as file, index}
 		<div
-			class="group relative flex flex-col items-center p-2 px-12 hover:bg-[#d9eeff] focus:bg-[#d9eeff]"
+			class="group relative flex flex-col w-full justify-center items-center p-2 px-12 hover:bg-[#d9eeff] focus:bg-[#d9eeff]"
 		>
-			{#if file instanceof File}
+			{#if file.type === "File"}
 				<div class="flex-shrink-0">
 					<FileIcon />
 				</div>
-				<p>
+				<p class="truncate w-[6rem]">
 					{file.name}
 				</p>
 			{:else}
@@ -68,7 +69,7 @@
 					<div class="flex-shrink-0">
 						<FolderIcon />
 					</div>
-					<p>
+					<p class="truncate">
 						{file.name}
 					</p>
 				</button>

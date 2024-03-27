@@ -17,7 +17,7 @@
 	><AppendIcon />New</button
 >
 
-<Dropdown class="py-1">
+<Dropdown class="py-1 bg-white z-10">
 	<DropdownItem class="flex items-center gap-2 text-xs text-gray-500">
 		<UploadFile/>
 	</DropdownItem>

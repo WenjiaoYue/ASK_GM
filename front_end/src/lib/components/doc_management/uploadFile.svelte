@@ -4,16 +4,17 @@
 	import { parentIdx, parentPath, storageFiles } from "../shared/shared.store";
 
 	async function handleFilesUpload(e: HTMLInputElement) {
+		
 		let file = e.target.files;
 		console.log("parentPath", $parentPath, $parentIdx);
 
 		let path = [$parentPath + file[0].name];
 
-		const res = await getKnowledgeBaseId(file, path);
-		if (res === "Succeed") {
+		// const res = await getKnowledgeBaseId(file, path);
+		// if (res === "Succeed") {
 		const newFile = {
 			name: file[0].name,
-			id: file[0].name,
+			id: $parentPath + file[0].name,
 			type: "File",
 			parent: "",
 		};
@@ -27,7 +28,7 @@
 			files[$parentIdx].children.push(newFile);
 			$storageFiles = files;
 		}
-		}
+		// }
 	}
 
 	function addKnowledgeFiles() {
@@ -38,7 +39,7 @@
 <input
 	on:change={(e) => handleFilesUpload(e)}
 	type="file"
-	style="display:none"
+	class="hidden"
 	id="getFile"
 	multiple
 />

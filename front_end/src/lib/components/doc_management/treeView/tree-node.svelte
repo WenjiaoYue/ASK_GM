@@ -1,8 +1,9 @@
 <script lang="ts">
-	import DeleteIcon from "$lib/assets/DocManagement/deleteIcon.svelte";
+	import DeleteRedIcon from "$lib/assets/DocManagement/deleteRedIcon.svelte";
 	import FileIcon from "$lib/assets/DocManagement/fileIcon.svelte";
 	import FolderIcon from "$lib/assets/DocManagement/folderIcon.svelte";
 	import { storageFiles } from "$lib/components/shared/shared.store";
+	import { deleteFiles } from "$lib/modules/doc/network";
 	import { createEventDispatcher } from "svelte";
 
 	let dispatch = createEventDispatcher();
@@ -38,6 +39,22 @@
 		}
 	});
 
+	async function deleteSubFolder() {
+
+		// const res = await deleteFiles(node.id);
+		// succeed
+		// if (res.status) {
+			const currentFolder = $storageFiles[currentIdx];
+			if (currentFolder && currentFolder.children) {
+				currentFolder.children = currentFolder.children.filter(
+					(child) => child.id !== node.id
+				);
+				storageFiles.set($storageFiles);
+			}
+			console.log("delete $storageFiles", $storageFiles);
+		// }
+	}
+
 
 </script>
 
@@ -46,11 +63,9 @@
 		class="my-2 flex items-center gap-4 {node.type === 'File' ? 'ml-5' : ''}"
 	>
 		<button
-			on:click={() => {                
-				dispatch("deleteToTree", { node, currentIdx });
-			}}
+			on:click={deleteSubFolder}
 		>
-			<DeleteIcon />
+			<DeleteRedIcon />
 		</button>
 		{#if node.type === "Directory"}
 			{#if open}
