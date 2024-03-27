@@ -25,3 +25,9 @@ export const admin$ = writable("" as string);
 
 export const parentPath = writable("" as string);
 export const parentIdx = writable(-1 as number);
+
+export const hintStart = writable(false as boolean);
+export const hintEnd = writable({status: false, hintContent: ''});
+
+export const needRecreate = writable(false as boolean);
+export const displayHintRecreate = writable(false as boolean);

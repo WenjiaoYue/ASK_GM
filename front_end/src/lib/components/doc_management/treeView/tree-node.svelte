@@ -2,7 +2,7 @@
 	import DeleteRedIcon from "$lib/assets/DocManagement/deleteRedIcon.svelte";
 	import FileIcon from "$lib/assets/DocManagement/fileIcon.svelte";
 	import FolderIcon from "$lib/assets/DocManagement/folderIcon.svelte";
-	import { storageFiles } from "$lib/components/shared/shared.store";
+	import { hintEnd, hintStart, needRecreate, storageFiles } from "$lib/components/shared/shared.store";
 	import { deleteFiles } from "$lib/modules/doc/network";
 	import { createEventDispatcher } from "svelte";
 
@@ -40,31 +40,31 @@
 	});
 
 	async function deleteSubFolder() {
+		hintStart.set(true);
+		needRecreate.set(true);
 
 		// const res = await deleteFiles(node.id);
 		// succeed
 		// if (res.status) {
-			const currentFolder = $storageFiles[currentIdx];
-			if (currentFolder && currentFolder.children) {
-				currentFolder.children = currentFolder.children.filter(
-					(child) => child.id !== node.id
-				);
-				storageFiles.set($storageFiles);
-			}
-			console.log("delete $storageFiles", $storageFiles);
+		const currentFolder = $storageFiles[currentIdx];
+		if (currentFolder && currentFolder.children) {
+			currentFolder.children = currentFolder.children.filter(
+				(child) => child.id !== node.id
+			);
+			storageFiles.set($storageFiles);
+		}
+		console.log("delete $storageFiles", $storageFiles);
+		hintStart.set(false);
+		hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
 		// }
 	}
-
-
 </script>
 
 <li class="relative ml-5">
 	<div
 		class="my-2 flex items-center gap-4 {node.type === 'File' ? 'ml-5' : ''}"
 	>
-		<button
-			on:click={deleteSubFolder}
-		>
+		<button on:click={deleteSubFolder}>
 			<DeleteRedIcon />
 		</button>
 		{#if node.type === "Directory"}

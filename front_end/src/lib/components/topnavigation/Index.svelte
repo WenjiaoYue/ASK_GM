@@ -11,13 +11,15 @@
 		Avatar,
 		DropdownDivider,
 	} from "flowbite-svelte";
-	import { admin$ } from "$lib/components/shared/shared.store";
+	import { admin$, displayHintRecreate } from "$lib/components/shared/shared.store";
 	import { userLogin } from "$lib/modules/chat/network";
 	import { getNotificationsContext } from "svelte-notifications";
 	import { Icon } from "flowbite-svelte-icons";
 	import Documentation from "$lib/components/documentation/Index.svelte";
 	import Question from "$lib/assets/icons/Question.svelte";
+	import WarningIcon from "$lib/assets/icons/warning.svelte";
 	import { goto } from "$app/navigation";
+	let popupModal = false;
 
 	let formModal = false;
 	let deleteModal = false;
@@ -35,7 +37,7 @@
 	}
 
 	function handleLinkTo() {
-		window.open('https://askintel.intel.com/', '_blank');
+		window.open("https://askintel.intel.com/", "_blank");
 	}
 
 	onMount(() => {
@@ -111,6 +113,15 @@
 		formModal = true;
 		goto("/");
 	}
+
+	function gotoIndex() {
+		goto("/");
+	}
+
+	function confirmNavigation(event) {
+		event.preventDefault();
+		popupModal = true;
+	}
 </script>
 
 <header class="relative z-10 h-16 w-full bg-[#00285a]">
@@ -122,7 +133,8 @@
 		>
 			<div class="relative left-0 flex w-full items-center">
 				<p class="mt-2 text-xl font-bold text-white">
-					<a href="/">Intel ASK GM</a></p>
+					<a href="/">Intel ASK GM</a>
+				</p>
 			</div>
 			<Button
 				on:click={() => (helpModal = true)}
@@ -140,13 +152,11 @@
 				<Dropdown inline triggeredBy="#avatar_with_name" class="w-50">
 					{#if username !== "admin"}
 						<div class="px-4 py-2">
-							<span class="block text-sm text-gray-900"
-								>{username}</span
-							>
+							<span class="block text-sm text-gray-900">{username}</span>
 							<span class="block truncate text-sm font-medium">{address}</span>
 						</div>
 					{:else}
-						<DropdownItem href="/">Index</DropdownItem>
+						<DropdownItem on:click={confirmNavigation}>Index</DropdownItem>
 						<DropdownDivider />
 						<DropdownItem href="/knowledge">Database Management</DropdownItem>
 					{/if}
@@ -228,9 +238,7 @@
 			name="exclamation-circle-outline"
 			class="mx-auto mb-4 h-12 w-12 text-gray-400"
 		/>
-		<h3 class="mb-5 text-lg font-normal text-gray-500">
-			Confirm Sign Out?
-		</h3>
+		<h3 class="mb-5 text-lg font-normal text-gray-500">Confirm Sign Out?</h3>
 		<Button
 			color="red"
 			class="mr-2"
@@ -243,5 +251,29 @@
 </Modal>
 
 <Modal bind:open={helpModal} size="xl" autoclose={true} outsideclose>
-	<Documentation on:linkToASKIntel={() => handleLinkTo()}/>
+	<Documentation on:linkToASKIntel={() => handleLinkTo()} />
+</Modal>
+
+<Modal bind:open={popupModal} size="xs" autoclose>
+	<div class="text-center">
+		<WarningIcon />
+		<h3 class="text-lg font-normal text-gray-700 dark:text-gray-400">
+			Not yet recreated knowledge base.
+		</h3>
+		<p class="mb-5 text-xs text-gray-500">
+			The new upload needs recreation for chat updates.
+		</p>
+		<Button
+			color="red"
+			class="me-2"
+			on:click={() => {
+				gotoIndex();
+			}}
+		>
+			Yes, I'm sure
+		</Button>
+		<Button color="alternative" on:click={() => {
+			displayHintRecreate.set(true);
+		}}>No, cancel</Button>
+	</div>
 </Modal>

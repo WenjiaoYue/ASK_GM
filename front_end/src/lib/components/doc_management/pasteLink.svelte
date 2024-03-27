@@ -2,13 +2,16 @@
 	import PasteLink from "$lib/assets/icons/paste-link.svelte";
 	import { fetchKnowledgeBaseIdByPaste } from "$lib/modules/doc/network";
 	import { Button, Helper, Input, Label, Modal } from "flowbite-svelte";
-	import { storageFiles } from "../shared/shared.store";
+	import { hintEnd, hintStart, needRecreate, storageFiles } from "../shared/shared.store";
 
 	let formModal = false;
 	let urlValue = "";
 
 	async function handelPasteURL() {
 		// path
+		hintStart.set(true);
+		needRecreate.set(true);
+
 		const pasteUrlList = urlValue.split(";").map((url) => url.trim());
 		formModal = false;
 
@@ -19,6 +22,8 @@
 			//
 			storageFiles.set(res);
 			// notification
+			hintStart.set(false);
+			hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
 		}
 	}
 </script>

@@ -1,10 +1,12 @@
 <script lang="ts">
 	import UploadFilesIcon from "$lib/assets/icons/upload-files.svelte";
 	import { getKnowledgeBaseId } from "$lib/modules/doc/network";
-	import { parentIdx, parentPath, storageFiles } from "../shared/shared.store";
+	import { hintEnd, hintStart, needRecreate, parentIdx, parentPath, storageFiles } from "../shared/shared.store";
 
 	async function handleFilesUpload(e: HTMLInputElement) {
-		
+		hintStart.set(true);
+		needRecreate.set(true);
+
 		let file = e.target.files;
 		console.log("parentPath", $parentPath, $parentIdx);
 
@@ -29,6 +31,8 @@
 			$storageFiles = files;
 		}
 		// }
+		hintStart.set(false);
+		hintEnd.set({status: true, hintContent: 'Uploaded Successfully'});
 	}
 
 	function addKnowledgeFiles() {

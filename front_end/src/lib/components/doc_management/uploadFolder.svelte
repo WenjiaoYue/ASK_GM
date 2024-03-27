@@ -1,7 +1,7 @@
 <script lang="ts">
 	import UploadDirectoryIcon from "$lib/assets/icons/upload-directory.svelte";
 	import { getKnowledgeBaseId } from "$lib/modules/doc/network";
-	import { parentIdx, parentPath, storageFiles } from "../shared/shared.store";
+	import { hintEnd, hintStart, needRecreate, parentIdx, parentPath, storageFiles } from "../shared/shared.store";
 
 	console.log('$parentPath', $parentPath);
 	
@@ -57,6 +57,9 @@
 	}
 
 	async function handleFolderUpload(newDirectory) {
+		hintStart.set(true);
+		needRecreate.set(true);
+
 		// flatten - files - [{file,path}]
 		if (newDirectory && newDirectory.length > 0) {
 			const { root, filesList } = fileListToObject(newDirectory);
@@ -71,8 +74,11 @@
 					files[$parentIdx].children.push(root);
 					$storageFiles = files;
 				}
+				hintStart.set(false);
+				hintEnd.set({status: true, hintContent: 'Uploaded Successfully'});
 			// }
 		}
+
 	}
 </script>
 

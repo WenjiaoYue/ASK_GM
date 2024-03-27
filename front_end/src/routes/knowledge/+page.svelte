@@ -11,6 +11,7 @@
 	import XMarkIcon from "$lib/assets/icons/x-mark-icon.svelte";
 	import chatResponse from "$lib/modules/chat/network";
 	import DeleteAll from "$lib/assets/DocManagement/DeleteAll.svelte";
+	import HintRecreate from "$lib/components/doc_management/HintRecreate.svelte";
 	import {
 		fetchKnowledgeBaseIdByPaste,
 		fetchDelete,
@@ -20,19 +21,15 @@
 		fetchReCreateKB,
 	} from "$lib/modules/doc/network";
 	import {
+		hintStart,
+		hintEnd,
 		knowledge_base_id,
 		storageFiles,
+		needRecreate,
+		displayHintRecreate
 	} from "$lib/components/shared/shared.store";
 	import csvIcon from "$lib/assets/icons/csv.svg";
-	import {
-		Progressbar,
-		Modal,
-		Label,
-		Input,
-		Helper,
-		Button,
-	} from "flowbite-svelte";
-	import { Icon } from "flowbite-svelte-icons";
+	import { Progressbar, Tooltip } from "flowbite-svelte";
 
 	import { Alert } from "flowbite-svelte";
 	import PasteLink from "$lib/components/doc_management/pasteLink.svelte";
@@ -49,7 +46,7 @@
 	let showAlert = false;
 	let uploading = false;
 	let status = false;
-	let hintContent = "";
+	let hintContent = "Successfully";
 
 	$: files = $storageFiles ? $storageFiles : [];
 
@@ -64,6 +61,14 @@
 			: null;
 	}
 
+
+	const hideHintAfterDelay = () => {
+        setTimeout(() => {
+            displayHintRecreate.set(false);
+        }, 3000); 
+    };
+
+	
 	let uploadProgress = 0;
 	let uploadHandle: number;
 
@@ -95,6 +100,8 @@
 		const res = await deleteAll();
 		if (res.status) {
 			// notification
+			showAndAutoDismissAlert("Delete Successfully");
+
 			console.log("res", res);
 			storageFiles.set([]);
 		}
@@ -104,8 +111,11 @@
 		const res = await fetchReCreateKB();
 		if (res.status) {
 			// notification
+			showAndAutoDismissAlert("Recreate Successfully");
+
 			console.log("res", res);
 			storageFiles.set([]);
+			needRecreate.set(false);
 		}
 	}
 
@@ -115,6 +125,13 @@
 		setTimeout(() => {
 			showAlert = false;
 		}, 2000);
+	}
+
+	function fetchHintEnd(hintContent) {
+		console.log("hintContent", hintContent);
+
+		handleUploadEnd();
+		showAndAutoDismissAlert(hintContent);
 	}
 
 	function handleUploadEnd() {
@@ -191,6 +208,9 @@
 	$: {
 		newDirectory ? (files = uploadFolder(newDirectory)) : null;
 		newDirectory = [];
+		$hintStart ? handleUploadBegin() : "";
+		$hintEnd.status ? fetchHintEnd($hintEnd.hintContent) : "";
+		$displayHintRecreate ? hideHintAfterDelay() : "";
 	}
 
 	/**
@@ -273,14 +293,22 @@
 							Your Knowledge Base
 						</h4>
 						<div class="flex-1 border-t-2 border-gray-200" />
-						<button on:click={reCreateKb} class="mt-3">
-							<div
-								class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
-							>
-								<RecreateIcon />
-								Recreate Knowledge Base
-							</div>
-						</button>
+						<div class="flex flex-col items-center">
+							{#if $displayHintRecreate}
+								<HintRecreate />
+							{/if}
+							<button id="hint-recreate" on:click={reCreateKb} class="mt-3">
+								<div
+									class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
+								>
+									<RecreateIcon />
+									Recreate Knowledge Base
+								</div>
+							</button>
+							<Tooltip triggeredBy="#hint-recreate">
+								Need takes a few minutes. Please choose a suitable time.
+							</Tooltip>
+						</div>
 
 						<button on:click={deleteAllFolder} class="mt-3">
 							<div
