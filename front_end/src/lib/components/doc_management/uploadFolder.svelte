@@ -1,10 +1,10 @@
 <script lang="ts">
 	import UploadDirectoryIcon from "$lib/assets/icons/upload-directory.svelte";
 	import { getKnowledgeBaseId } from "$lib/modules/doc/network";
-	import { storageFiles } from "../shared/shared.store";
-	export let parentPath = "";
+	import { parentIdx, parentPath, storageFiles } from "../shared/shared.store";
 
-
+	console.log('$parentPath', $parentPath);
+	
 	function addKnowledgeDirectory() {
 		document.getElementById("getDirectory")?.click();
 	}
@@ -13,12 +13,12 @@
 		handleFolderUpload(e.target.files);
 	}
 
-	function fileListToObject(fileList: FileList) {
-		let filesList = []
+	function fileListToObject(fileList: FileList) {		
+		let filesList = [];
 		// append
 		let root = {
 			name: fileList[0].webkitRelativePath.split("/")[0],
-			id: fileList[0].webkitRelativePath.split("/")[0],
+		 	id: $parentPath + fileList[0].webkitRelativePath.split("/")[0],
 			type: "Directory",
 			children: [],
 		};
@@ -27,6 +27,7 @@
 			let file = fileList[i];
 			let pathParts = file.webkitRelativePath.split("/");
 			let subObj = root.children;
+
 			for (let j = 1; j < pathParts.length - 1; j++) {
 				let part = pathParts[j];
 
@@ -36,7 +37,7 @@
 				} else {
 					let newItem = {
 						name: part,
-						id: pathParts.slice(0, j + 1).join("/"),
+						id: $parentPath + pathParts.slice(0, j + 1).join("/"),
 						type: "Directory",
 						children: [],
 					};
@@ -46,22 +47,30 @@
 			}
 			subObj.push({
 				name: pathParts[pathParts.length - 1],
-				id: file.webkitRelativePath,
+				id: $parentPath + file.webkitRelativePath,
 				type: "File",
 			});
-			filesList.push(file.webkitRelativePath);
+			filesList.push($parentPath + file.webkitRelativePath);
 		}
 
-		return {root, filesList};
+		return { root, filesList };
 	}
 
 	async function handleFolderUpload(newDirectory) {
 		// flatten - files - [{file,path}]
 		if (newDirectory && newDirectory.length > 0) {
-			const {root, filesList} = fileListToObject(newDirectory);
+			const { root, filesList } = fileListToObject(newDirectory);
+			console.log("root", root, filesList);
+
 			const res = await getKnowledgeBaseId(newDirectory, filesList);
 			if (res === "Succeed") {
-				storageFiles.update((files) => [...files, root]);
+				if ($parentIdx === -1) {
+					storageFiles.update((files) => [...files, root]);
+				} else {
+					let files = $storageFiles;
+					files[$parentIdx].children.push(root);
+					$storageFiles = files;
+				}
 			}
 		}
 	}

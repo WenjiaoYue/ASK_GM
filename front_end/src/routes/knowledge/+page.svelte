@@ -10,10 +10,14 @@
 	import DownloadDirectoryIcon from "$lib/assets/icons/download-directory.svelte";
 	import XMarkIcon from "$lib/assets/icons/x-mark-icon.svelte";
 	import chatResponse from "$lib/modules/chat/network";
+	import DeleteAll from "$lib/assets/DocManagement/DeleteAll.svelte";
 	import {
 		fetchKnowledgeBaseIdByPaste,
 		fetchDelete,
+		deleteFiles,
 		fetchAllFile,
+		deleteAll,
+		fetchReCreateKB
 	} from "$lib/modules/doc/network";
 	import {
 		knowledge_base_id,
@@ -33,8 +37,10 @@
 	import { Alert } from "flowbite-svelte";
 	import PasteLink from "$lib/components/doc_management/pasteLink.svelte";
 	import { onMount } from "svelte";
-	import UploadFolder from "$lib/components/doc_management/uploadFolder.svelte";
-	import UploadFiles from "$lib/components/doc_management/uploadFile.svelte";
+	import HomeUploadFiles from "$lib/components/doc_management/HomeUploadFiles.svelte";
+	import HomeUploadFolder from "$lib/components/doc_management/HomeUploadFolder.svelte";
+	import DeleteIcon from "$lib/assets/DocManagement/deleteIcon.svelte";
+	import RecreateIcon from "$lib/assets/DocManagement/Recreate.svelte";
 
 	/**
 	 * @type {string | any[]}
@@ -77,12 +83,32 @@
 		}
 	}
 
+
+
 	function handleUploadBegin() {
 		uploadHandle = setInterval(() => {
 			if (uploadProgress < 70) uploadProgress += 5;
 			else if (uploadProgress < 90) uploadProgress += 2;
 			else if (uploadProgress < 99) uploadProgress += 1;
 		}, 500);
+	}
+
+	async function deleteAllFolder() {
+		const res = await deleteAll();
+		if (res.status) {
+			// notification
+			console.log("res", res);
+			storageFiles.set([]);
+		}
+	}
+
+	async function reCreateKb() {
+		const res = await fetchReCreateKB();
+		if (res.status) {
+			// notification
+			console.log("res", res);
+			storageFiles.set([]);
+		}
 	}
 
 	function showAndAutoDismissAlert(hintContent: string) {
@@ -177,15 +203,6 @@
 	let Library = [{ content: "Intel ZiZhu Q&A." }];
 
 
-
-	function addKnowledgeDirectory() {
-		document.getElementById("getDirectory")?.click();
-	}
-
-	function handleUploadDir(e: HTMLInputElement) {
-		uploadFolder(e.target.files);
-	}
-
 	/**
 	 * @param {any} name
 	 * @param {number} index
@@ -193,6 +210,24 @@
 	function removeFile(name, index) {
 		files.splice(index, 1);
 		files = files;
+	}
+
+	async function deleteSubFolder(e) {
+		const { node, currentIdx } = e.detail;
+		console.log("node", node);
+
+		const res = await deleteFiles(node.id);
+		// succeed
+		if (res.status) {
+			const currentFolder = $storageFiles[currentIdx];
+			if (currentFolder && currentFolder.children) {
+				currentFolder.children = currentFolder.children.filter(
+					(child) => child.id !== node.id
+				);
+				storageFiles.set($storageFiles);
+			}
+			console.log("$storageFiles", $storageFiles);
+		}
 	}
 </script>
 
@@ -231,17 +266,17 @@
 					We can provide customized answers to your questions based on the
 					content you have uploaded.
 				</p>
-				<div class="flex gap-5 mt-6">
+				<div class="mt-6 flex gap-5">
 					<div
 						class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
 					>
-						<UploadFiles />
+						<HomeUploadFiles />
 					</div>
 
 					<div
 						class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
 					>
-						<UploadFolder />
+						<HomeUploadFolder />
 					</div>
 
 					<div
@@ -252,19 +287,36 @@
 				</div>
 
 				<div class="mt-8">
-					<div class="mt-4 flex items-center">
+					<div class="mt-4 flex items-center gap-4">
 						<h4
 							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-blue-600"
 						>
 							Your Knowledge Base
 						</h4>
 						<div class="flex-1 border-t-2 border-gray-200" />
+						<button on:click={reCreateKb} class="mt-3">
+							<div
+								class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
+							>
+								<RecreateIcon />
+								Recreate Knowledge Base 
+							</div>
+						</button>
+
+						<button on:click={deleteAllFolder} class="mt-3">
+							<div
+								class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
+							>
+								<DeleteAll />
+								Delete All File
+							</div>
+						</button>
 					</div>
 					<div class="my-4 flex items-center justify-start">
 						<!-- {#if status && !uploading} -->
 						<!--  Knowledge Info -->
 						{#if files.length > 0}
-							<DocCard {files} />
+							<DocCard {files} on:deleteToMain={deleteSubFolder} />
 						{:else}
 							<NoFile />
 							<p class="mt-2 text-sm opacity-70">No files uploaded</p>

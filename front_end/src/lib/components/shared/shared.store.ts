@@ -22,3 +22,6 @@ export const chats$ = writable({} as Record<string, Chat>);
 export const knowledge_base_id = writable("" as string);
 export const storageFiles = writable([]);
 export const admin$ = writable("" as string);
+
+export const parentPath = writable("" as string);
+export const parentIdx = writable(-1 as number);

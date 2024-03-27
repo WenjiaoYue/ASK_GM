@@ -1,68 +1,108 @@
 <script lang="ts">
+	import DeleteIcon from "$lib/assets/DocManagement/deleteIcon.svelte";
 	import FileIcon from "$lib/assets/DocManagement/fileIcon.svelte";
 	import FolderIcon from "$lib/assets/DocManagement/folderIcon.svelte";
-    import { onMount } from "svelte";
-    type IData = {
-        name: string;
-        id: string;
-        type: string;
-        children: never[];
-        parent: IData;
-    }
-    export let
-        node: IData, 
-        collapse = false, 
-        onClick = '', 
-        parent = '';
+	import { storageFiles } from "$lib/components/shared/shared.store";
+	import { createEventDispatcher } from "svelte";
 
-    let open = collapse;
+	let dispatch = createEventDispatcher();
+	import { onMount } from "svelte";
+	type IData = {
+		name: string;
+		id: string;
+		type: string;
+		children: never[];
+		parent: IData;
+		currentIdx: number;
+	};
+	export let node: IData,
+		collapse = false,
+		onClick = "",
+		parent = "";
 
-    function toggleOpen(){
-        open = !open;
-    };
+	export let currentIdx;
 
-    function handleClickOpen(){
-        toggleOpen();
-    };
+	let open = collapse;
 
-    onMount(() => {
-        if(node){
-            node.parent = parent;
-        }
-    })
+	function toggleOpen() {
+		open = !open;
+	}
+
+	function handleClickOpen() {
+		toggleOpen();
+	}
+
+	onMount(() => {
+		if (node) {
+			node.parent = parent;
+		}
+	});
+
+
 </script>
 
-<li class="ml-5">
-    <div class="flex gap-4 my-1 items-center {node.type === 'File' ? 'ml-5' : ''}">
-        {#if node.type === 'Directory'}
-            {#if open}
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <svg on:click={handleClickOpen} data-testid="caret-down-node" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-            {:else}
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <svg on:click={handleClickOpen} data-testid="caret-up-node" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-            {/if}
-            <FolderIcon className={'w-16 h-16'}/>
-        {:else}
-            <FileIcon className={'w-12 h-12'} />
-        {/if}
-        <span>{node?.name}</span>
-    </div>
+<li class="relative ml-5">
+	<div
+		class="my-2 flex items-center gap-4 {node.type === 'File' ? 'ml-5' : ''}"
+	>
+		<button
+			on:click={() => {                
+				dispatch("deleteToTree", { node, currentIdx });
+			}}
+		>
+			<DeleteIcon />
+		</button>
+		{#if node.type === "Directory"}
+			{#if open}
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<svg
+					on:click={handleClickOpen}
+					data-testid="caret-down-node"
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5 cursor-pointer"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+				>
+					<path
+						fill-rule="evenodd"
+						d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+			{:else}
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<svg
+					on:click={handleClickOpen}
+					data-testid="caret-up-node"
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5 cursor-pointer"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+				>
+					<path
+						fill-rule="evenodd"
+						d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+			{/if}
+			<FolderIcon className={"w-12 h-12"} />
+		{:else}
+			<FileIcon className={"w-10 h-10"} />
+		{/if}
+		<span>{node?.name}</span>
+	</div>
 
-    {#if open && node.type === 'Directory'}
-        <ul>
-            {#each node.children as child}
-                <svelte:self 
-                    bind:node={child} 
-                    bind:parent={node}
-                    collapse={collapse} 
-                    onClick={onClick}
-                />
-            {/each} 
-        </ul>
-    {/if}
+	{#if open && node.type === "Directory"}
+		<ul>
+			{#each node.children as child}
+				<svelte:self
+					bind:node={child}
+					bind:parent={node}
+					{collapse}
+					{onClick}
+				/>
+			{/each}
+		</ul>
+	{/if}
 </li>

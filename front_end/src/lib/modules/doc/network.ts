@@ -15,8 +15,53 @@ async function fetchFunc(url, init) {
 	}
 }
 
+export async function deleteAll() {
+	const UploadKnowledge_URL = KNOWLEDGE_URL + "/delete_all";
+
+	const init: RequestInit = {
+		method: "DELETE",
+		headers: { "Content-Type": "application/json" },
+	};
+
+	return fetchFunc(UploadKnowledge_URL, init);
+}
+
+
+export async function fetchReCreateKB() {
+	const UploadKnowledge_URL = KNOWLEDGE_URL + "/recreate_kb";
+	const data = {
+		"knowledge_base_id": "default"
+	};
+
+	const init: RequestInit = {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(data),
+	};
+
+	return fetchFunc(UploadKnowledge_URL, init);
+}
+
+
+export async function deleteFiles(path) {
+	const UploadKnowledge_URL = KNOWLEDGE_URL + "/delete_file";
+
+	const data = {
+		del_path: path,
+		knowledge_base_id: "default",
+	};
+
+	const init: RequestInit = {
+		method: "DELETE",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(data),
+	};
+
+	return fetchFunc(UploadKnowledge_URL, init);
+}
+
 export async function getKnowledgeBaseId(files, pathList) {
-	console.log("files", files);
+	console.log("getKnowledgeBaseId", pathList);
 
 	const UploadKnowledge_URL = KNOWLEDGE_URL + "/upload_files";
 	const formData = new FormData();

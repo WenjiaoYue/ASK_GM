@@ -1,7 +1,9 @@
 <script lang="ts">
 	import AddNew from "./add-new.svelte";
 	import TreeBranch from "./tree-branch.svelte";
+	import { createEventDispatcher } from "svelte";
 
+	let dispatch = createEventDispatcher();
 	type IData = {
 		name: string;
 		id: string;
@@ -9,17 +11,27 @@
 		children: never[];
 	};
 
+	export let currentIdx;
+
 	export let collapse = false,
 		data: IData[] = [],
 		onClick = "";
+
+
+	
 </script>
 
 <div>
 	{#if data && data.length > 0}
 		<ul>
-			<TreeBranch {data} {collapse} {onClick} />
+			<TreeBranch {data} {collapse} {onClick} {currentIdx}
+			on:deleteToSvelte={(event) => {
+                const { node, currentIdx } = event.detail;
+                dispatch('deleteToSvelteCard', { node, currentIdx });
+			}}
+			/>
 		</ul>
 	{:else}
-		<p>An error occured during rendering!</p>
+		<p>Folder is empty. Please upload a file.</p>
 	{/if}
 </div>

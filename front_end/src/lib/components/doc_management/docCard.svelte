@@ -4,16 +4,32 @@
 	import SvelteTree from "$lib/components/doc_management/treeView/svelte-tree.svelte";
 	import FileIcon from "$lib/assets/DocManagement/fileIcon.svelte";
 	import DeleteIcon from "$lib/assets/DocManagement/deleteIcon.svelte";
+	import AppendKb from "./AppendKb.svelte";
+	import { deleteFiles } from "$lib/modules/doc/network";
+	import { storageFiles } from "../shared/shared.store";
+	import { createEventDispatcher } from "svelte";
 
+	let dispatch = createEventDispatcher();
 	let showDirectory = false;
 	let chooseDir = undefined;
+	let currentIdx = 0;
 
 	export let files = [];
 
-	function handleDirClick(file) {
+	function handleDirClick(file, index) {
 		chooseDir = file;
 		showDirectory = true;
+		currentIdx = index;
 	}
+
+	async function deleteCurrentFolder(path, idx) {
+		const res = await deleteFiles(path);
+		// succeed
+		if (res.status) {
+			$storageFiles = $storageFiles.filter((_, index) => index !== idx);
+		}
+	}
+
 </script>
 
 <Modal
@@ -23,7 +39,16 @@
 	class="z-50 w-full"
 	outsideclose
 >
-	<SvelteTree data={chooseDir.children} />
+	<AppendKb path={chooseDir} {currentIdx} />
+
+	<SvelteTree
+		data={chooseDir.children}
+		{currentIdx}
+		on:deleteToSvelteCard={(event) => {
+			const { node, currentIdx } = event.detail;
+			dispatch('deleteToMain', { node, currentIdx });
+		}}
+	/>
 </Modal>
 
 <div class="grid grid-cols-7 gap-5">
@@ -39,7 +64,7 @@
 					{file.name}
 				</p>
 			{:else}
-				<button on:click={() => handleDirClick(file)}>
+				<button on:click={() => handleDirClick(file, index)}>
 					<div class="flex-shrink-0">
 						<FolderIcon />
 					</div>
@@ -49,7 +74,10 @@
 				</button>
 			{/if}
 
-			<div class="absolute right-0 top-0 hidden group-hover:block">
+			<div
+				class="absolute right-0 top-0 hidden group-hover:block"
+				on:click={() => deleteCurrentFolder(file.id, index)}
+			>
 				<DeleteIcon />
 			</div>
 		</div>
