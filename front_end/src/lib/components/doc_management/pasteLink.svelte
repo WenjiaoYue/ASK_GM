@@ -1,39 +1,33 @@
 <script lang="ts">
 	import PasteLink from "$lib/assets/icons/paste-link.svelte";
+	import { fetchKnowledgeBaseIdByPaste } from "$lib/modules/doc/network";
 	import { Button, Helper, Input, Label, Modal } from "flowbite-svelte";
+	import { storageFiles } from "../shared/shared.store";
 
-    let formModal = false;
-    let urlValue = "";
+	let formModal = false;
+	let urlValue = "";
 
+	async function handelPasteURL() {
+		// path
+		// root/某file
+		const pasteUrlList = urlValue.split(";").map((url) => url.trim());
+		formModal = false;
 
-    async function handelPasteURL() {
-		// const pasteUrlList = urlValue.split(";").map((url) => url.trim());
-		// uploading = true;
-		// formModal = false;
-		// handleUploadBegin();
-
-		// const res = await fetchKnowledgeBaseIdByPaste(pasteUrlList);
-		// console.log("res", res);
-		// // succeed
-		// if (res.status) {
-		// 	showAndAutoDismissAlert("Uploaded Successfully");
-		// 	uploading = false;
-		// 	handleUploadEnd();
-		// 	status = true;
-		// }
+		const res = await fetchKnowledgeBaseIdByPaste(pasteUrlList);
+		console.log("fetchKnowledgeBaseIdByPaste", res);
+		// succeed
+		if (res.status) {
+			//
+			storageFiles.set(res);
+			// notification
+		}
 	}
-
 </script>
 
-<button
-	class="flex"
-    on:click={() => (formModal = true)}
->
+<button class="flex" on:click={() => (formModal = true)}>
 	<PasteLink />
 	Paste Link
 </button>
-
-
 
 <Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
 	<Label class="space-y-2">

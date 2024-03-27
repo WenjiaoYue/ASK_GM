@@ -63,14 +63,10 @@
 
 	onMount(async () => {
 		const res = await fetchAllFile();
-		console.log("res - 3.27", res);
-
 		if (res) {
 			storageFiles.set(res);
-			files = $storageFiles;			
+			files = $storageFiles;
 		}
-		console.log('files', files);
-
 	});
 
 	async function deleteFile() {
@@ -154,17 +150,16 @@
 
 	function uploadFolder(newDirectory) {
 		if (newDirectory && newDirectory.length > 0) {
-			const folderName = newDirectory[0].webkitRelativePath.split("/")[0];
+			const obj = fileListToObject(newDirectory);
+			const folderName = obj.name;
 			const folderObject = {
-				[folderName]: newDirectory,
+				[folderName]: obj,
 			};
-			files.push(folderObject);
-			filterFiles(files);
+			files = [...files, folderObject];
 		}
-		console.log("uploadFolder", files);
-
 		return files;
 	}
+
 	/**
 	 * @type {never[]}
 	 */
@@ -181,12 +176,14 @@
 
 	let Library = [{ content: "Intel ZiZhu Q&A." }];
 
-	function addKnowledgeFiles() {
-		document.getElementById("getFile")?.click();
-	}
+
 
 	function addKnowledgeDirectory() {
 		document.getElementById("getDirectory")?.click();
+	}
+
+	function handleUploadDir(e: HTMLInputElement) {
+		uploadFolder(e.target.files);
 	}
 
 	/**
@@ -234,15 +231,7 @@
 					We can provide customized answers to your questions based on the
 					content you have uploaded.
 				</p>
-				<div class="mt-5 flex flex-row gap-5">
-					<input
-						bind:files={newFiles}
-						type="file"
-						style="display:none"
-						id="getFile"
-						multiple
-					/>
-
+				<div class="flex gap-5 mt-6">
 					<div
 						class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
 					>
@@ -254,6 +243,7 @@
 					>
 						<UploadFolder />
 					</div>
+
 					<div
 						class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
 					>
@@ -272,7 +262,7 @@
 					</div>
 					<div class="my-4 flex items-center justify-start">
 						<!-- {#if status && !uploading} -->
-						<!-- upload Knowledge Info -->
+						<!--  Knowledge Info -->
 						{#if files.length > 0}
 							<DocCard {files} />
 						{:else}

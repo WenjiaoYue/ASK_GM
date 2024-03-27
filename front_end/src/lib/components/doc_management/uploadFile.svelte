@@ -1,41 +1,42 @@
 <script lang="ts">
 	import UploadFilesIcon from "$lib/assets/icons/upload-files.svelte";
-	import { Button, Helper, Input, Label, Modal } from "flowbite-svelte";
+	import { getKnowledgeBaseId } from "$lib/modules/doc/network";
+	import { storageFiles } from "../shared/shared.store";
+	export let parentPath = "";
 
-    let formModal = false;
-    let urlValue = "";
-
-
-    async function handelPasteURL() {
-		// const pasteUrlList = urlValue.split(";").map((url) => url.trim());
-		// uploading = true;
-		// formModal = false;
-		// handleUploadBegin();
-
-		// const res = await fetchKnowledgeBaseIdByPaste(pasteUrlList);
-		// console.log("res", res);
-		// // succeed
-		// if (res.status) {
-		// 	showAndAutoDismissAlert("Uploaded Successfully");
-		// 	uploading = false;
-		// 	handleUploadEnd();
-		// 	status = true;
-		// }
+	function addKnowledgeFiles() {
+		document.getElementById("getFile")?.click();
 	}
 
+	async function handleFilesUpload(e: HTMLInputElement) {
+		let file = e.target.files;
+		let path = [parentPath + file[0].name];
+		const res = await getKnowledgeBaseId(file, path);
+		// succeed
+		if (res === "Succeed") {
+			const newFile = {
+				name: file[0].name,
+				id: file[0].name,
+				type: "File",
+				parent: "",
+			};
+			storageFiles.update((files) => [...files, newFile]);			
+		}
+	}
 </script>
 
-<!-- <button
-						on:click={() => addKnowledgeFiles()}
-						id="getFile"
-						class="mt-6"
-					> -->
+<input
+	on:change={handleFilesUpload}
+	type="file"
+	style="display:none"
+	id="getFile"
+	multiple
+/>
 <button
-	class="flex"
-    on:click={() => (formModal = true)}
+	on:click={() => addKnowledgeFiles()}
+	id="getFile"
+	class="flex items-center gap-2"
 >
-<UploadFilesIcon />
-Upload Files
+	<UploadFilesIcon />
+	Upload Files
 </button>
-
-

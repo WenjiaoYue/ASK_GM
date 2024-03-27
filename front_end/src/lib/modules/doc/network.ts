@@ -2,6 +2,43 @@ import { env } from "$env/dynamic/public";
 
 const KNOWLEDGE_URL = env.KNOWLEDGE_URL;
 
+async function fetchFunc(url, init) {
+	try {
+		const response = await fetch(url, init);
+		if (!response.ok) throw response.status;
+
+		return await response.json();
+	} catch (error) {
+		console.error("network error: ", error);
+
+		return undefined;
+	}
+}
+
+export async function getKnowledgeBaseId(files, pathList) {
+	console.log("files", files);
+
+	const UploadKnowledge_URL = KNOWLEDGE_URL + "/upload_files";
+	const formData = new FormData();
+	for (const file of files) {
+		formData.append("files", file);
+	}
+
+	for (const path of pathList) {
+		console.log("path", path);
+		formData.append("file_paths", path);
+	}
+
+	formData.append("knowledge_base_id", "default");
+
+	const init: RequestInit = {
+		method: "POST",
+		body: formData,
+	};
+
+	return fetchFunc(UploadKnowledge_URL, init);
+}
+
 export async function fetchKnowledgeBaseIdByPaste(pasteUrlList: any) {
 	const url = `${KNOWLEDGE_URL}/upload_link`;
 	const data = {

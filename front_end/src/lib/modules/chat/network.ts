@@ -107,25 +107,6 @@ async function fetchFunc(url, init) {
 	}
 }
 
-async function getKnowledgeBaseId(files) {
-	
-	const UploadKnowledge_URL = KNOWLEDGE_URL + "/append";
-	const formData = new FormData();
-
-	for (const file of files) {
-		formData.append("files", file);
-	}
-
-	formData.append("knowledge_base_id", "default");
-
-	const init: RequestInit = {
-		method: "POST",
-		body: formData,
-	};
-
-	return fetchFunc(UploadKnowledge_URL, init);
-}
-
 async function downloadfile() {
 	const res = await fetch(DOWNLOAD_FEEDBACK_URL, {
 		method: "GET",
@@ -146,7 +127,6 @@ export default {
 	chatMessage,
 	regFunc,
 	translateFunc,
-	getKnowledgeBaseId,
 	downloadfile,
 };
 
