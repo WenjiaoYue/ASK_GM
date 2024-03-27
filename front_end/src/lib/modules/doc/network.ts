@@ -41,11 +41,11 @@ export async function fetchDelete() {
 	}
 }
 
-export async function fetchStatus() {
+export async function fetchAllFile() {
 	const data = {
-		user_id: "admin",
+		knowledge_base_id: "default",
 	};
-	const url = `${KNOWLEDGE_URL}/verify_upload`;
+	const url = `${KNOWLEDGE_URL}/get_file_structure`;
 	const init: RequestInit = {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },

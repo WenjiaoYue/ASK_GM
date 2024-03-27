@@ -13,8 +13,8 @@
 	import {
 		fetchKnowledgeBaseIdByPaste,
 		fetchDelete,
-		fetchStatus,
-	} from "$lib/modules/doc/Network";
+		fetchAllFile,
+	} from "$lib/modules/doc/network";
 	import {
 		knowledge_base_id,
 		storageFiles,
@@ -62,8 +62,15 @@
 	let uploadHandle: number;
 
 	onMount(async () => {
-		const res = await fetchStatus();
-		status = res.is_uploaded;
+		const res = await fetchAllFile();
+		console.log("res - 3.27", res);
+
+		if (res) {
+			storageFiles.set(res);
+			files = $storageFiles;			
+		}
+		console.log('files', files);
+
 	});
 
 	async function deleteFile() {
@@ -227,7 +234,7 @@
 					We can provide customized answers to your questions based on the
 					content you have uploaded.
 				</p>
-				<div class="flex flex-row gap-5">
+				<div class="mt-5 flex flex-row gap-5">
 					<input
 						bind:files={newFiles}
 						type="file"
@@ -235,20 +242,18 @@
 						id="getFile"
 						multiple
 					/>
-					
-						<div
-							class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
-						>
+
+					<div
+						class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
+					>
 						<UploadFiles />
+					</div>
 
-						</div>
-
-					
-						<div
-							class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
-						>
-							<UploadFolder />
-						</div>
+					<div
+						class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
+					>
+						<UploadFolder />
+					</div>
 					<div
 						class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
 					>
@@ -268,16 +273,17 @@
 					<div class="my-4 flex items-center justify-start">
 						<!-- {#if status && !uploading} -->
 						<!-- upload Knowledge Info -->
-						<DocCard />
+						{#if files.length > 0}
+							<DocCard {files} />
+						{:else}
+							<NoFile />
+							<p class="mt-2 text-sm opacity-70">No files uploaded</p>
+						{/if}
 						<!-- {:else if status && uploading}
 								<div class="animate-spin">
 									<UploadKnowledge />
 								</div>
-							{:else}
-								<NoFile />
-								<p class="mt-2 text-sm opacity-70">No files uploaded</p>
-							
-							{/if} -->
+							 -->
 					</div>
 				</div>
 				<div>
