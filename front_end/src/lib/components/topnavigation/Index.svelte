@@ -111,6 +111,7 @@
 		admin$.set("");
 		sessionStorage.removeItem("userInfo");
 		formModal = true;
+		// request back end 
 		goto("/");
 	}
 
@@ -156,9 +157,9 @@
 							<span class="block truncate text-sm font-medium">{address}</span>
 						</div>
 					{:else}
-						<DropdownItem on:click={confirmNavigation}>Index</DropdownItem>
+						<DropdownItem on:click={confirmNavigation}>Chat</DropdownItem>
 						<DropdownDivider />
-						<DropdownItem href="/knowledge">Database Management</DropdownItem>
+						<DropdownItem href="/knowledge">Management</DropdownItem>
 					{/if}
 					<DropdownItem slot="footer" on:click={() => (deleteModal = true)}
 						>Sign out</DropdownItem

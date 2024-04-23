@@ -2,7 +2,13 @@
 	import DeleteRedIcon from "$lib/assets/DocManagement/deleteRedIcon.svelte";
 	import FileIcon from "$lib/assets/DocManagement/fileIcon.svelte";
 	import FolderIcon from "$lib/assets/DocManagement/folderIcon.svelte";
-	import { hintEnd, hintStart, needRecreate, storageFiles } from "$lib/components/shared/shared.store";
+	import LinkfolderIcon from "$lib/assets/DocManagement/LinkfolderIcon.svelte";
+	import {
+		hintEnd,
+		hintStart,
+		needRecreate,
+		storageFiles,
+	} from "$lib/components/shared/shared.store";
 	import { deleteFiles } from "$lib/modules/doc/network";
 	import { createEventDispatcher } from "svelte";
 
@@ -46,16 +52,16 @@
 		const res = await deleteFiles(node.id);
 		// succeed
 		if (res.status) {
-		const currentFolder = $storageFiles[currentIdx];
-		if (currentFolder && currentFolder.children) {
-			currentFolder.children = currentFolder.children.filter(
-				(child) => child.id !== node.id
-			);
-			storageFiles.set($storageFiles);
-		}
-		console.log("delete $storageFiles", $storageFiles);
-		hintStart.set(false);
-		hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
+			const currentFolder = $storageFiles[currentIdx];
+			if (currentFolder && currentFolder.children) {
+				currentFolder.children = currentFolder.children.filter(
+					(child) => child.id !== node.id
+				);
+				storageFiles.set($storageFiles);
+			}
+			console.log("delete $storageFiles", $storageFiles);
+			hintStart.set(false);
+			hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
 		}
 	}
 </script>
@@ -67,6 +73,7 @@
 		<button on:click={deleteSubFolder}>
 			<DeleteRedIcon />
 		</button>
+		<!-- link -->
 		{#if node.type === "Directory"}
 			{#if open}
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -101,10 +108,16 @@
 					/>
 				</svg>
 			{/if}
-			<FolderIcon className={"w-12 h-12"} />
+			{#if node.id === "uploaded_links"}
+				<LinkfolderIcon className={"w-12 h-12"} />
+			{:else}
+				<FolderIcon className={"w-12 h-12"} />
+			{/if}
 		{:else}
 			<FileIcon className={"w-10 h-10"} />
 		{/if}
+		<!-- link -->
+
 		<span>{node?.name}</span>
 	</div>
 

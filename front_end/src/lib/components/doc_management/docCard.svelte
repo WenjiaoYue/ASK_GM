@@ -1,13 +1,20 @@
 <script>
 	import FolderIcon from "$lib/assets/DocManagement/folderIcon.svelte";
+	import LinkfolderIcon from "$lib/assets/DocManagement/LinkfolderIcon.svelte";
 	import { Modal } from "flowbite-svelte";
 	import SvelteTree from "$lib/components/doc_management/treeView/svelte-tree.svelte";
 	import FileIcon from "$lib/assets/DocManagement/fileIcon.svelte";
 	import DeleteIcon from "$lib/assets/DocManagement/deleteIcon.svelte";
 	import AppendKb from "./AppendKb.svelte";
 	import { deleteFiles } from "$lib/modules/doc/network";
-	import { hintEnd, hintStart, needRecreate, storageFiles } from "../shared/shared.store";
+	import {
+		hintEnd,
+		hintStart,
+		needRecreate,
+		storageFiles,
+	} from "../shared/shared.store";
 	import { createEventDispatcher } from "svelte";
+	import LinkIcon from "$lib/assets/DocManagement/LinkIcon.svelte";
 
 	let dispatch = createEventDispatcher();
 	let showDirectory = false;
@@ -16,10 +23,13 @@
 
 	export let files = [];
 
+	console.log("files", files);
+
 	function handleDirClick(file, index) {
 		chooseDir = file;
 		showDirectory = true;
 		currentIdx = index;
+		console.log("chooseDir", chooseDir);
 	}
 
 	async function deleteCurrentFolder(path, idx) {
@@ -29,9 +39,9 @@
 		const res = await deleteFiles(path);
 		// succeed
 		if (res.status) {
-		$storageFiles = $storageFiles.filter((_, index) => index !== idx);
-		hintStart.set(false);
-		hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
+			$storageFiles = $storageFiles.filter((_, index) => index !== idx);
+			hintStart.set(false);
+			hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
 		}
 	}
 </script>
@@ -43,7 +53,11 @@
 	class="z-50 w-full"
 	outsideclose
 >
-	<AppendKb path={chooseDir} {currentIdx} />
+	{#if chooseDir.id !== "uploaded_links"}
+		<AppendKb path={chooseDir} {currentIdx} />
+	{:else}
+		<LinkIcon />
+	{/if}
 	<hr class="my-8 h-px border-0 bg-gray-200 dark:bg-gray-700" />
 	<SvelteTree data={chooseDir.children} {currentIdx} />
 	<!-- on:deleteToSvelteCard={(event) => {
@@ -64,8 +78,23 @@
 				<p class="w-[6rem] truncate">
 					{file.name}
 				</p>
+			{:else if file.type === "Directory" && file.id === "uploaded_links"}
+				<button
+					class="flex flex-col items-center"
+					on:click={() => handleDirClick(file, index)}
+				>
+					<div class="flex-shrink-0">
+						<LinkfolderIcon />
+					</div>
+					<p class="truncate">
+						{file.name}
+					</p>
+				</button>
 			{:else}
-				<button on:click={() => handleDirClick(file, index)}>
+				<button
+					class="flex flex-col items-center"
+					on:click={() => handleDirClick(file, index)}
+				>
 					<div class="flex-shrink-0">
 						<FolderIcon />
 					</div>

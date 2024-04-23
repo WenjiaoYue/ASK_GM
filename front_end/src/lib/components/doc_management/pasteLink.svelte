@@ -1,6 +1,6 @@
 <script lang="ts">
 	import PasteLink from "$lib/assets/icons/paste-link.svelte";
-	import { fetchKnowledgeBaseIdByPaste } from "$lib/modules/doc/network";
+	import { fetchAllFile, fetchKnowledgeBaseIdByPaste } from "$lib/modules/doc/network";
 	import { Button, Helper, Input, Label, Modal } from "flowbite-svelte";
 	import { hintEnd, hintStart, needRecreate, storageFiles } from "../shared/shared.store";
 
@@ -19,8 +19,11 @@
 		console.log("fetchKnowledgeBaseIdByPaste", res);
 		// succeed
 		if (res.status) {
-			//
-			storageFiles.set(res);
+			const res = await fetchAllFile();
+			if (res) {
+				storageFiles.set(res);
+			}
+
 			// notification
 			hintStart.set(false);
 			hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });

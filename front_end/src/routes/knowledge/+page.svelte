@@ -232,7 +232,7 @@
 	}
 </script>
 
-<div class="flex flex-col flex-wrap sm:flex-row">
+<div class="flex flex-col flex-wrap sm:flex-row w-full">
 	{#if showAlert}
 		<Alert
 			color="green"
@@ -242,12 +242,13 @@
 			<span class="font-medium">{hintContent}</span>
 		</Alert>
 	{/if}
-	<div class="relative mx-auto mb-12 max-w-screen-xl">
+	<!-- max-w-screen-xl -->
+	<div class="relative mx-auto mb-12 max-w-screen-xl xl:max-w-screen-2xl w-full xl:h-[50rem]">
 		<div
-			class="pricing-box overflow-hiddenshadow mx-auto max-w-lg rounded-lg bg-white lg:flex lg:max-w-none lg:justify-between"
+			class="h-full w-full pricing-box overflow-hiddenshadow mx-auto max-w-lg rounded-lg bg-white lg:flex lg:max-w-none lg:justify-between"
 		>
 			<div
-				class="lg:flex-shrink-1 relative rounded-l-lg bg-white px-6 py-8 lg:p-12"
+				class="h-full w-full lg:flex-shrink-1 relative rounded-l-lg bg-white px-6 py-8 lg:p-12"
 			>
 				{#if uploadProgress}
 					<Progressbar
@@ -263,11 +264,14 @@
 				>
 					Knowledge Base
 				</h3>
-				<p class="mt-6 text-base leading-6 text-gray-500">
+				<p class="xl:mt-12 mt-6 text-base leading-6 text-gray-500">
 					We can provide customized answers to your questions based on the
 					content you have uploaded.
 				</p>
-				<div class="mt-6 flex gap-5">
+				<p class="text-base leading-6 text-gray-500">
+					The paste links will be uniformly placed in the same folder.
+				</p>
+				<div class="w-full mt-6 flex gap-5 xl:mt-12">
 					<div
 						class="flex cursor-pointer items-center gap-2 rounded p-2 px-2 ring-1 hover:bg-[#f3f4f6]"
 					>
@@ -287,44 +291,16 @@
 					</div>
 				</div>
 
-				<div class="mt-8">
-					<div class="mt-4 flex items-center gap-4">
+				<div class="mt-8 xl:mt-12">
+					<div class="mt-4 xl:mt-4 flex items-center gap-4">
 						<h4
 							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-blue-600"
 						>
-							Your Knowledge Base
+							New Uploads
 						</h4>
 						<div class="flex-1 border-t-2 border-gray-200" />
-						<div class="flex flex-col items-center">
-							{#if $displayHintRecreate}
-								<HintRecreate />
-							{/if}
-							{#if reCreating}
-								<button id="hint-recreate" class="mt-3">
-									<div
-										class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-400 p-2 px-2 text-white ring-1"
-									>
-										<LoadingButton />
-										Recreate Knowledge Base
-									</div>
-								</button>
-							{:else}
-								<button id="hint-recreate" on:click={reCreateKb} class="mt-3">
-									<div
-										class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
-									>
-										<RecreateIcon />
-										Recreate Knowledge Base
-									</div>
-								</button>
-							{/if}
 
-							<Tooltip triggeredBy="#hint-recreate">
-								Need takes a few minutes. Please choose a suitable time.
-							</Tooltip>
-						</div>
-
-						<button on:click={deleteAllFolder} class="mt-3">
+						<button on:click={deleteAllFolder} class="mt-3 xl:mt-6">
 							<div
 								class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
 							>
@@ -333,7 +309,7 @@
 							</div>
 						</button>
 					</div>
-					<div class="my-4 mb-6 flex items-center justify-start">
+					<div class="my-4 xl:mb-6 flex items-center justify-start">
 						<!-- {#if status && !uploading} -->
 						<!--  Knowledge Info -->
 						{#if files.length > 0}
@@ -348,17 +324,45 @@
 								</div>
 							 -->
 					</div>
+					<div class="flex flex-col items-end">
+						{#if $displayHintRecreate}
+							<HintRecreate />
+						{/if}
+						{#if reCreating}
+							<button id="hint-recreate" class="xl:mt-6 mt-3">
+								<div
+									class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-400 p-2 px-2 text-white ring-1"
+								>
+									<LoadingButton />
+									Recreate Knowledge Base
+								</div>
+							</button>
+						{:else}
+							<button id="hint-recreate" on:click={reCreateKb} class="mt-3">
+								<div
+									class="flex cursor-pointer items-center justify-center gap-2 rounded bg-blue-600 p-2 px-2 text-white ring-1 hover:bg-blue-400"
+								>
+									<RecreateIcon />
+									Recreate Knowledge Base
+								</div>
+							</button>
+						{/if}
+
+						<Tooltip triggeredBy="#hint-recreate">
+							Need takes a few minutes. Please choose a suitable time.
+						</Tooltip>
+					</div>
 				</div>
 				<div>
-					<div class="flex items-center">
+					<div class="flex items-center xl:mt-14">
 						<h4
 							class="flex-shrink-0 bg-white pr-4 text-sm font-semibold uppercase leading-5 tracking-wider text-blue-600"
 						>
-							Knowledge Base Library
+							Base Knowledge Library
 						</h4>
 						<div class="flex-1 border-t-2 border-gray-200" />
 					</div>
-					<ul class="lg:col-gap-8 lg:row-gap-5 mt-8 lg:grid lg:grid-cols-2">
+					<ul class="lg:col-gap-8 lg:row-gap-5 xl:mt-12 mt-8 lg:grid lg:grid-cols-2">
 						{#each Library as { content }}
 							<li class="flex items-center lg:col-span-1">
 								<div class="flex-shrink-0">
@@ -373,7 +377,7 @@
 				</div>
 			</div>
 
-			<p class="my-8 border border-gray-200" />
+			<p class="my-8 border border-gray-200 xl:my-12" />
 			<!-- Download csv -->
 
 			<div

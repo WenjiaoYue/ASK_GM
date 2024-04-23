@@ -17,16 +17,13 @@
 		data: IData[] = [],
 		onClick = "";
 
-	
-	
+	console.log("data", data);
 </script>
 
 <div>
 	{#if data && data.length > 0}
 		<ul>
-			<TreeBranch {data} {collapse} {onClick} {currentIdx}
-			
-			/>
+			<TreeBranch {data} {collapse} {onClick} {currentIdx} />
 			<!-- on:deleteToSvelte={(event) => {
                 const { node, currentIdx } = event.detail;
                 dispatch('deleteToSvelteCard', { node, currentIdx });
