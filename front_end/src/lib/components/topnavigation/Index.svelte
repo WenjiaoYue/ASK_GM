@@ -211,7 +211,7 @@
 						/>
 					</Label>
 					<Label class="space-y-2">
-						<span>Your password</span>
+						<span>Password</span>
 						<Input
 							class="p-2"
 							type="password"
