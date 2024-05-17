@@ -21,7 +21,7 @@
 	import { goto } from "$app/navigation";
 	let popupModal = false;
 
-	let formModal = false;
+	let formModal = true;
 	let deleteModal = false;
 	let helpModal = false;
 	let email = "";
