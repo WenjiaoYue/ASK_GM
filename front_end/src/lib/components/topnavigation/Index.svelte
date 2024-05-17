@@ -177,10 +177,10 @@
 	<div
 		id="popup-modal"
 		tabindex="-1"
-		class="fixed left-0 right-0 top-0 z-50 flex h-screen items-center justify-center overflow-y-auto overflow-x-hidden bg-black bg-opacity-30"
+		class="fixed left-0 right-0 top-0 z-50 flex h-screen items-center justify-center overflow-y-auto overflow-x-hidden bg-gray-300"
 	>
-		<div class="relative max-h-full w-full max-w-md p-4">
-			<div class="relative rounded-lg bg-white shadow dark:bg-gray-700">
+		<div class="relative max-h-full w-full max-w-md p-4 border shadow  bg-[#fff]">
+			<div class="relative bg-white">
 				<form class="flex flex-col space-y-6 p-10" action="#">
 					<h3 class="mb-4 text-xl font-medium text-black">
 						Sign in to Intel ASK GM
@@ -196,7 +196,7 @@
 						/>
 					</Label>
 					<Label class="space-y-2">
-						<span>Your password</span>
+						<span>Password</span>
 						<Input
 							class="p-2"
 							type="password"
@@ -206,11 +206,11 @@
 							bind:value={password}
 						/>
 					</Label>
-					<Button
+					<button
 						on:click={() => setLogin()}
 						type="submit"
-						class="w-full rounded-lg bg-blue-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200"
-						>Login to your account</Button
+						class="w-full bg-blue-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200"
+						>Login to your account</button
 					>
 				</form>
 			</div>
@@ -241,3 +241,12 @@
 <Modal bind:open={helpModal} size="xl" autoclose={true} outsideclose>
 	<Documentation />
 </Modal>
+
+
+<style>
+	#popup-modal {
+    background-image: url('../../assets/images/user_bg.webp');
+    background-size: cover; 
+    background-position: center; 
+  }
+</style>
