@@ -21,7 +21,8 @@
 	import { goto } from "$app/navigation";
 	let popupModal = false;
 
-	let formModal = true;
+	let formModal;
+	
 	let deleteModal = false;
 	let helpModal = false;
 	let email = "";
@@ -41,8 +42,6 @@
 	}
 
 	onMount(() => {
-		console.log('getItem("userInfo")', sessionStorage.getItem("userInfo"));
-
 		if (sessionStorage.getItem("userInfo")) {
 			let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
 
@@ -52,6 +51,7 @@
 				username = userInfo.given_name;
 				address = userInfo.email_address;
 				admin$.set(username);
+
 			} else {
 				address = "";
 			}
