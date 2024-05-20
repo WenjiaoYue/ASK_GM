@@ -11,7 +11,10 @@
 		Avatar,
 		DropdownDivider,
 	} from "flowbite-svelte";
-	import { admin$, displayHintRecreate } from "$lib/components/shared/shared.store";
+	import {
+		admin$,
+		displayHintRecreate,
+	} from "$lib/components/shared/shared.store";
 	import { userLogin } from "$lib/modules/chat/network";
 	import { getNotificationsContext } from "svelte-notifications";
 	import { Icon } from "flowbite-svelte-icons";
@@ -21,8 +24,8 @@
 	import { goto } from "$app/navigation";
 	let popupModal = false;
 
-	let formModal;
-	
+	let formModal = true;
+
 	let deleteModal = false;
 	let helpModal = false;
 	let email = "";
@@ -51,7 +54,6 @@
 				username = userInfo.given_name;
 				address = userInfo.email_address;
 				admin$.set(username);
-
 			} else {
 				address = "";
 			}
@@ -68,40 +70,42 @@
 		sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
 	}
 
-	async function setLogin() {
-		if (email === "admin" && password === "admin") {
-			admin$.set("admin");
-			username = "admin";
-			userInfo = {
-				given_name: "admin",
-				email_address: "admin",
-			};
-			storeInSession();
-			formModal = false;
-		} else {
-			const res = await userLogin(email, password);
-
-			if (res.msg == "Login successful") {
-				addNotification({
-					text: "login succeed",
-					position: "top-right",
-					type: "succeed",
-					removeAfter: 1000,
-				});
-				username = res.user_info.given_name;
-				address = res.user_info.email_address;
-				userInfo = res.user_info;
-				console.log("userInfo", userInfo);
-				formModal = false;
-				admin$.set(username);
+	async function setLogin() {		
+		if (email !== '' && password !== '') {
+			if (email === "admin" && password === "admin") {
+				admin$.set("admin");
+				username = "admin";
+				userInfo = {
+					given_name: "admin",
+					email_address: "admin",
+				};
 				storeInSession();
+				formModal = false;
 			} else {
-				addNotification({
-					text: "login fail",
-					position: "top-right",
-					type: "error",
-					removeAfter: 1000,
-				});
+				const res = await userLogin(email, password);
+
+				if (res.msg == "Login successful") {
+					addNotification({
+						text: "login succeed",
+						position: "top-right",
+						type: "succeed",
+						removeAfter: 1000,
+					});
+					username = res.user_info.given_name;
+					address = res.user_info.email_address;
+					userInfo = res.user_info;
+					console.log("userInfo", userInfo);
+					formModal = false;
+					admin$.set(username);
+					storeInSession();
+				} else {
+					addNotification({
+						text: "login fail",
+						position: "top-right",
+						type: "error",
+						removeAfter: 1000,
+					});
+				}
 			}
 		}
 	}
@@ -111,7 +115,7 @@
 		admin$.set("");
 		sessionStorage.removeItem("userInfo");
 		formModal = true;
-		// request back end 
+		// request back end
 		goto("/");
 	}
 
@@ -224,7 +228,7 @@
 					<button
 						on:click={() => setLogin()}
 						type="submit"
-						class="w-full  bg-blue-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200"
+						class="w-full bg-blue-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition duration-200 ease-in hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200"
 						>Login to your account</button
 					>
 				</form>
@@ -273,16 +277,19 @@
 		>
 			Yes, I'm sure
 		</Button>
-		<Button color="alternative" on:click={() => {
-			displayHintRecreate.set(true);
-		}}>No, cancel</Button>
+		<Button
+			color="alternative"
+			on:click={() => {
+				displayHintRecreate.set(true);
+			}}>No, cancel</Button
+		>
 	</div>
 </Modal>
 
 <style>
-  #popup-modal {
-    background-image: url('../../assets/images/user_bg.webp');
-    background-size: cover;
-    background-position: center;
-  }
+	#popup-modal {
+		background-image: url("../../assets/images/user_bg.webp");
+		background-size: cover;
+		background-position: center;
+	}
 </style>
