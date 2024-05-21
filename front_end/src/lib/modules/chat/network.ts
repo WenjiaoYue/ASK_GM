@@ -50,8 +50,8 @@ function chatMessage(
 			query: question,
 			knowledge_base_id: "default",
 			stream: true,
-			max_new_tokens: 768,
-			return_link: true,
+			max_new_tokens: 1024,
+			return_link: false,
 		},
 	};
 
