@@ -51,7 +51,7 @@ function chatMessage(
 			knowledge_base_id: "default",
 			stream: true,
 			max_new_tokens: 1024,
-			return_link: false,
+			return_link: true,
 		},
 	};
 
