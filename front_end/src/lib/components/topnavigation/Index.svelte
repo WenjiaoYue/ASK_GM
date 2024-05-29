@@ -210,7 +210,7 @@
 						<Input
 							class="p-2"
 							type="text"
-							placeholder="username"
+							placeholder="CCR\Account Name"
 							required
 							bind:value={email}
 						/>
