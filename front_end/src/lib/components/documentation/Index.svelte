@@ -1,12 +1,12 @@
 <script>
 	let includeList = [
-		{ content: "Related Question Guidance." },
-		{ content: "Question and Answer History." },
-		{ content: "Introduction to Hot Topics." },
-		{ content: "Real-time question and answer dialogue." },
+		{ content: "Related Question Guidance" },
+		{ content: "Question and Answer History" },
+		{ content: "Introduction to Hot Topics" },
+		{ content: "Real-time question and answer dialogue" },
 	];
 
-	let notIncludeList = [{ content: "Multi-modal Q&A." }];
+	let notIncludeList = [{ content: "Multi-modal Q&A" }];
 
 	import { createEventDispatcher } from "svelte";
 

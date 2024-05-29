@@ -139,7 +139,7 @@
 		>
 			<div class="relative left-0 flex w-full items-center">
 				<p class="mt-2 text-xl font-bold text-white">
-					<a href="/">Intel ASK GM</a>
+					<a href="/">Intel Zizhu ASK GM</a>
 				</p>
 			</div>
 			<Button
@@ -203,7 +203,7 @@
 			<div class="relative bg-white shadow">
 				<form class="flex flex-col space-y-6 p-10" action="#">
 					<h3 class="mb-4 text-xl font-medium text-black">
-						Sign in to Intel ASK GM
+						Sign in to Intel Zizhu ASK GM
 					</h3>
 					<Label class="space-y-2">
 						<span>Username</span>

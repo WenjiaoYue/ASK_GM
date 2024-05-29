@@ -139,7 +139,7 @@
 </script>
 
 <svelte:head>
-	<title>Neural Chat</title>
+	<title>Intel Zizhu AskGM Home</title>
 	<meta name="description" content="Neural Chat" />
 </svelte:head>
 
@@ -149,7 +149,7 @@
 	>
 		<ChatMessage
 			type="Assistant"
-			message={`Welcome to Intel ASK GM! 😊`}
+			message={`Welcome to Intel Zizhu ASK GM! 😊`}
 			displayTimer={false}
 			hiddenTool={true}
 		/>

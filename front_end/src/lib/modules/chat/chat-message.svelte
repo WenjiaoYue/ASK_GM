@@ -33,7 +33,7 @@
 	export let previousMessage: { role: string; content: string };
 	export let hiddenTool: Boolean = false;
 
-	const msg = "Welcome to Neural Chat! 😊";
+	const msg = "Welcome to Intel Zizhu ASK GM! 😊";
 	const checkboxLabels = [
 		"This is harmful / unsafe",
 		"This isn't true",
