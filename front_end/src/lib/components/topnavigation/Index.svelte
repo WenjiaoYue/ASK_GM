@@ -22,6 +22,7 @@
 	import Question from "$lib/assets/icons/Question.svelte";
 	import WarningIcon from "$lib/assets/icons/warning.svelte";
 	import { goto } from "$app/navigation";
+	import personImage from '$lib/assets/images/person.svg';
 	let popupModal = false;
 
 	let formModal = false;
@@ -151,7 +152,7 @@
 			{#if username}
 				<!-- logout and login info -->
 				<Button pill color="light" id="avatar_with_name" class="px-4 py-0">
-					<Avatar src="/src/lib/assets/images/person.svg" class="me-2" />
+					<Avatar src={personImage} class="me-2" />
 					{username}
 				</Button>
 				<Dropdown inline triggeredBy="#avatar_with_name" class="w-50">
