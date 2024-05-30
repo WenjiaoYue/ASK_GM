@@ -1,2 +1,2 @@
-front_end/node_modules
-front_end/.svelte-kit
+**/node_modules
+**/.svelte-kit
