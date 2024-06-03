@@ -1,6 +1,6 @@
 <svg
 	t="1699532005309"
-	class="icon"
+	class="icon rotate-180"
 	viewBox="0 0 1024 1024"
 	version="1.1"
 	xmlns="http://www.w3.org/2000/svg"
