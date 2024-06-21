@@ -145,7 +145,7 @@
 
 <div class="flex h-full w-full flex-col md:p-4 xl:p-10">
 	<div
-		class="carousel carousel-vertical chat-scrollbar flex h-0 flex-grow flex-col overflow-auto p-4"
+		class="carousel carousel-vertical chat-scrollbar flex h-0 flex-grow flex-col overflow-auto p-4 pr-9"
 	>
 		<ChatMessage
 			type="Assistant"

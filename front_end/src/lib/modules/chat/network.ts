@@ -23,8 +23,6 @@ function regFunc(currentMsg) {
 	return content;
 }
 
-
-
 function chatMessage(
 	chatMessages: ChatMessage[],
 	type: any,
@@ -64,7 +62,6 @@ function chatMessage(
 	return eventSource;
 }
 
-
 function userLogin(username, password) {
 	const encryptedPassword = sjcl.encrypt(secretKey, password);
 	console.log("encryptedPassword", encryptedPassword);
@@ -82,12 +79,33 @@ function userLogin(username, password) {
 }
 
 async function translateFunc(msg: string) {
+	console.log('msg', msg);
+
+	if (msg === "Opps, it looks like your question just went on a broader ride beyond the ASK GM ranch where we only focus on Intel Zizhu site questions. Please refine your question, or change to another.") {
+		return { tranlated_content: "问题超纲了哦，请理解ASK GM 小助手的业务范围是仅限于紫竹site的运营，请换个问题吧！" };
+	}
+
+	if (msg.includes("Great curiosity! While we're scratching our heads for an answer, you could shoot your question over to ASKGM.zizhu.@intel.com? They've got the magic inbox to help you out!")) {
+		return { tranlated_content: "这是个好问题，但是目前ASK GM 小助手没有针对该问题的库存哦，请您手动发送邮件到ASKGM.zizhu.@intel.com 去寻求解答吧！" };
+	}
+
+	if (msg === "问题超纲了哦，请理解ASK GM 小助手的业务范围是仅限于紫竹site的运营，请换个问题吧！") {
+		return { tranlated_content: "Opps, it looks like your question just went on a broader ride beyond the ASK GM ranch where we only focus on Intel Zizhu site questions. Please refine your question, or change to another." };
+	}
+
+	if (msg === "这是个好问题，但是目前ASK GM 小助手没有针对该问题的库存哦，请您手动发送邮件到ASKGM.zizhu.@intel.com 去寻求解答吧！") {
+		return { tranlated_content: "Great curiosity! While we're scratching our heads for an answer, you could shoot your question over to ASKGM.zizhu.@intel.com? They've got the magic inbox to help you out!" };
+	}		
+
 	const translateObject = {
 		content: msg,
 	};
 	const init: RequestInit = {
 		method: "POST",
 		body: JSON.stringify(translateObject),
+		headers: {
+			'Content-Type': 'application/json'
+		}
 	};
 
 	return await fetchFunc(TRANSLATE_URL, init);
