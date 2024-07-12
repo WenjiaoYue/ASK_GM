@@ -2,7 +2,7 @@
 	import PasteLink from "$lib/assets/icons/paste-link.svelte";
 	import { fetchAllFile, fetchKnowledgeBaseIdByPaste } from "$lib/modules/doc/network";
 	import { Button, Helper, Input, Label, Modal } from "flowbite-svelte";
-	import { hintEnd, hintStart, needRecreate, storageFiles } from "../shared/shared.store";
+	import { hintEnd, hintStart, needRecreate, netError, storageFiles } from "../shared/shared.store";
 
 	let formModal = false;
 	let urlValue = "";
@@ -27,6 +27,13 @@
 			// notification
 			hintStart.set(false);
 			hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
+		} else {
+			netError.set(true);
+			setTimeout(() => {
+				netError.set(false);
+			}, 3000);
+			hintStart.set(false);
+			hintEnd.set({ status: true, hintContent: "" });
 		}
 	}
 </script>

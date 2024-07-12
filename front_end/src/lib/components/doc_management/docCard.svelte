@@ -11,6 +11,7 @@
 		hintEnd,
 		hintStart,
 		needRecreate,
+		netError,
 		storageFiles,
 	} from "../shared/shared.store";
 	import { createEventDispatcher } from "svelte";
@@ -42,6 +43,13 @@
 			$storageFiles = $storageFiles.filter((_, index) => index !== idx);
 			hintStart.set(false);
 			hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
+		} else {
+			netError.set(true);
+			setTimeout(() => {
+				netError.set(false);
+			}, 3000);
+			hintStart.set(false);
+			hintEnd.set({ status: true, hintContent: "" });
 		}
 	}
 </script>

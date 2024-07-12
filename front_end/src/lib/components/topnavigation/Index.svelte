@@ -14,6 +14,7 @@
 	import {
 		admin$,
 		displayHintRecreate,
+		netError,
 	} from "$lib/components/shared/shared.store";
 	import { userLogin } from "$lib/modules/chat/network";
 	import { getNotificationsContext } from "svelte-notifications";
@@ -22,7 +23,9 @@
 	import Question from "$lib/assets/icons/Question.svelte";
 	import WarningIcon from "$lib/assets/icons/warning.svelte";
 	import { goto } from "$app/navigation";
-	import personImage from '$lib/assets/images/person.svg';
+	import personImage from "$lib/assets/images/person.svg";
+	import { Alert } from "flowbite-svelte";
+
 	let popupModal = false;
 
 	let formModal = false;
@@ -34,6 +37,7 @@
 	let username = "";
 	let userInfo = {};
 	let address = "";
+	let loginError = false;
 
 	const { addNotification } = getNotificationsContext();
 
@@ -71,8 +75,8 @@
 		sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
 	}
 
-	async function setLogin() {		
-		if (email !== '' && password !== '') {
+	async function setLogin() {
+		if (email !== "" && password !== "") {
 			if (email === "admin" && password === "admin") {
 				admin$.set("admin");
 				username = "admin";
@@ -84,12 +88,18 @@
 				formModal = false;
 			} else {
 				const res = await userLogin(email, password);
+				console.log("res", res);
 
-				if (res.msg == "Login successful") {
+				if (!res) {
+					loginError = true;
+					return;
+				} else if (res.msg == "Login successful") {
+					loginError = false;
+
 					addNotification({
-						text: "login succeed",
+						text: "login fail",
 						position: "top-right",
-						type: "succeed",
+						type: "error",
 						removeAfter: 1000,
 					});
 					username = res.user_info.given_name;
@@ -99,13 +109,6 @@
 					formModal = false;
 					admin$.set(username);
 					storeInSession();
-				} else {
-					addNotification({
-						text: "login fail",
-						position: "top-right",
-						type: "error",
-						removeAfter: 1000,
-					});
 				}
 			}
 		}
@@ -191,6 +194,17 @@
 			{/if}
 		</div>
 	</div>
+	{#if $netError}
+		<Alert
+			color="red"
+			dismissable
+			rounded={false}
+			class="flex items-center gap-3 border-t-4 border-red-800 bg-red-100 p-4 text-sm text-red-800 dark:border-red-800 dark:bg-gray-800 dark:text-red-400"
+		>
+			<span class="p-2 text-lg font-bold">Network congestion detected!</span>
+			Please try again or refresh the page.
+		</Alert>
+	{/if}
 </header>
 
 {#if formModal}
@@ -205,6 +219,12 @@
 					<h3 class="mb-4 text-xl font-medium text-black">
 						Sign in to Intel Zizhu ASK GM
 					</h3>
+					{#if loginError}
+						<Alert color="red" dismissable>
+							<span class="font-medium">Login Error!</span>
+							Invalid username or password.
+						</Alert>
+					{/if}
 					<Label class="space-y-2">
 						<span>Username</span>
 						<Input

@@ -12,6 +12,7 @@
 	import chatResponse from "$lib/modules/chat/network";
 	import { Checkbox, Modal } from "flowbite-svelte";
 	import NoTranslate from "$lib/assets/icons/NoTranslate.svelte";
+	import { hintEnd, hintStart, netError } from "$lib/components/shared/shared.store";
 
 	let formModal = false;
 	let clickLike = false;
@@ -59,8 +60,18 @@
 
 	async function handleTranslateClick() {
 		const translateResult = await chatResponse.translateFunc(message);
-		message = translateResult.tranlated_content;
+		if (translateResult.tranlated_content) {
+			message = translateResult.tranlated_content;
+		} else {
+			netError.set(true);
+			setTimeout(() => {
+				netError.set(false);
+			}, 3000);
+			hintStart.set(false);
+			hintEnd.set({ status: true, hintContent: "" });
+		}
 		clickTranslate = !clickTranslate;
+
 	}
 
 	function removeHtmlContent(input: string): string {
@@ -130,77 +141,86 @@
 		</div>
 		<!-- && message !== msg  -->
 		{#if (type === "Assistant" || type === "assistant") && !hiddenTool}
-			<p class="text-[0.7rem]  -top-9 absolute right-[2rem] {isLikeHovered ? 'opacity-100 ' : 'hidden'}">
+			<p
+				class="absolute -top-9 right-[2rem] text-[0.7rem] {isLikeHovered
+					? 'opacity-100 '
+					: 'hidden'}"
+			>
 				Like
 			</p>
-			<p class="text-[0.7rem] -top-9 absolute right-[0.6rem] {isDislikeHovered ? 'opacity-100' : 'hidden'}">
+			<p
+				class="absolute -top-9 right-[0.6rem] text-[0.7rem] {isDislikeHovered
+					? 'opacity-100'
+					: 'hidden'}"
+			>
 				Dislike
 			</p>
-			<p class="text-[0.7rem] -top-9 absolute -right-5 {isTransHovered ? 'opacity-100' : 'hidden'}">
+			<p
+				class="absolute -right-5 -top-9 text-[0.7rem] {isTransHovered
+					? 'opacity-100'
+					: 'hidden'}"
+			>
 				Translate
 			</p>
-		<div class="absolute -top-5 right-0 hidden h-5 group-hover:flex">
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div
-				class="flex flex-col items-center"
-				on:mouseenter={() => (isLikeHovered = true)}
-				on:mouseleave={() => (isLikeHovered = false)}
-			>
-			
-				<figure
-					class="h-5 w-5 cursor-pointer text-black hover:text-yellow-600"
-					on:click={() => {
-						[clickLike, clickDislike] = [true, false];
-						handleLikeClick(0);
-					}}
+			<div class="absolute -top-5 right-0 hidden h-5 group-hover:flex">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div
+					class="flex flex-col items-center"
+					on:mouseenter={() => (isLikeHovered = true)}
+					on:mouseleave={() => (isLikeHovered = false)}
 				>
-					{#if clickLike}
-						<ActiveLikeButtonIcon />
-					{:else}
-						<LikeButtonIcon />
-					{/if}
-				</figure>
-			</div>
-		
-			<div
-				class="flex flex-col items-center"
-				on:mouseenter={() => (isDislikeHovered = true)}
-				on:mouseleave={() => (isDislikeHovered = false)}
-			>
+					<figure
+						class="h-5 w-5 cursor-pointer text-black hover:text-yellow-600"
+						on:click={() => {
+							[clickLike, clickDislike] = [true, false];
+							handleLikeClick(0);
+						}}
+					>
+						{#if clickLike}
+							<ActiveLikeButtonIcon />
+						{:else}
+							<LikeButtonIcon />
+						{/if}
+					</figure>
+				</div>
 
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<figure
-					class="h-5 w-5 cursor-pointer text-black hover:text-yellow-600"
-					on:click={() => {
-						formModal = true;
-					}}
+				<div
+					class="flex flex-col items-center"
+					on:mouseenter={() => (isDislikeHovered = true)}
+					on:mouseleave={() => (isDislikeHovered = false)}
 				>
-					{#if clickDislike}
-						<ActiveDislikeButtonIcon />
-					{:else}
-						<DislikeButtonIcon />
-					{/if}
-				</figure>
-			</div>
-			<div
-				class="flex flex-col items-center"
-				on:mouseenter={() => (isTransHovered = true)}
-				on:mouseleave={() => (isTransHovered = false)}
-			>
-			
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<figure
-					class="mb-1 h-3 w-3 cursor-pointer text-black hover:text-yellow-600"
-					on:click={handleTranslateClick}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<figure
+						class="h-5 w-5 cursor-pointer text-black hover:text-yellow-600"
+						on:click={() => {
+							formModal = true;
+						}}
+					>
+						{#if clickDislike}
+							<ActiveDislikeButtonIcon />
+						{:else}
+							<DislikeButtonIcon />
+						{/if}
+					</figure>
+				</div>
+				<div
+					class="flex flex-col items-center"
+					on:mouseenter={() => (isTransHovered = true)}
+					on:mouseleave={() => (isTransHovered = false)}
 				>
-					{#if clickTranslate}
-						<NoTranslate />
-					{:else}
-						<TranslateIcon />
-					{/if}
-				</figure>
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<figure
+						class="mb-1 h-3 w-3 cursor-pointer text-black hover:text-yellow-600"
+						on:click={handleTranslateClick}
+					>
+						{#if clickTranslate}
+							<NoTranslate />
+						{:else}
+							<TranslateIcon />
+						{/if}
+					</figure>
+				</div>
 			</div>
-		</div>
 		{/if}
 		{#if showImg}
 			{#await imgPromise}

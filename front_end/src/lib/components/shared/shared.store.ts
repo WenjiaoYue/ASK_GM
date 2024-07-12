@@ -28,6 +28,8 @@ export const parentIdx = writable(-1 as number);
 
 export const hintStart = writable(false as boolean);
 export const hintEnd = writable({status: false, hintContent: ''});
+export const netError = writable(false as boolean);
+
 
 export const needRecreate = writable(false as boolean);
 export const displayHintRecreate = writable(false as boolean);

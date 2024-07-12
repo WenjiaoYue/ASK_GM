@@ -11,7 +11,7 @@
 
 	// tool
 	import type { Message, Chat } from "$lib/components/shared/shared.type";
-	import { chats$ } from "$lib/components/shared/shared.store";
+	import { chats$, netError } from "$lib/components/shared/shared.store";
 	import {
 		upsertChat,
 		scrollToBottom,
@@ -19,6 +19,8 @@
 	import chatResponse from "$lib/modules/chat/network";
 	import WaitForKnowledge from "$lib/modules/chat/wait-for-knowledge.svelte";
 	import LoadingAnimation from "./loadingAnimation.svelte";
+	import { getNotificationsContext } from "svelte-notifications";
+	const { addNotification } = getNotificationsContext();
 
 	let query: string = "";
 	let answer: string = "";
@@ -34,11 +36,9 @@
 	let filename: string;
 
 	onMount(async () => {
-		scrollToDiv = document
-		?.querySelector(".chat-scrollbar")!;
-		console.log('scrollToDiv', scrollToDiv);
-		
-		});
+		scrollToDiv = document?.querySelector(".chat-scrollbar")!;
+		console.log("scrollToDiv", scrollToDiv);
+	});
 
 	$: enableRegenerateMessage = !loading && chatMessages.length > 2;
 
@@ -56,7 +56,8 @@
 	}
 
 	const handleSubmit = async (enableRegenerate: boolean): Promise<void> => {
-		console.log('scrollToDiv', scrollToDiv);
+		console.log("scrollToDiv", scrollToDiv);
+		netError.set(false)
 
 		scrollToBottom(scrollToDiv);
 		let queryContent = query;
@@ -81,7 +82,6 @@
 				{ role: "Human", content: queryContent },
 			];
 			scrollToBottom(scrollToDiv);
-
 		}
 
 		type = {
@@ -89,24 +89,23 @@
 			knowledge: "ASK_GM",
 		};
 		const knowledgeContent = chatMessages[chatMessages.length - 1].content;
-		
 
 		const eventSource = chatResponse.chatMessage(
 			chatMessages,
 			type,
 			blob,
 			filename,
-			knowledgeContent,
+			knowledgeContent
 		);
 		eventSource.addEventListener("error", handleError);
 		eventSource.addEventListener("message", (e) => {
 			let content = e.data;
 			if (/^<br\/><br\/>$/.test(content)) {
-				content = '';
+				content = "";
 			}
 			scrollToBottom(scrollToDiv);
-			console.log('e', content);
-			
+			console.log("e", content);
+
 			try {
 				loading = false;
 				if (content) {
@@ -132,6 +131,9 @@
 	};
 
 	function handleError<T>(err: T) {
+		console.log("coming");
+		netError.set(true)
+
 		loading = false;
 		query = "";
 		answer = "";
@@ -197,7 +199,7 @@
 			<div class="relative flex w-full items-center justify-center">
 				<!-- Textarea -->
 				<textarea
-					class="textarea-bordered h-12 w-full border-gray-200 border-b-2 border-b-[#00469f]"
+					class="textarea-bordered h-12 w-full border-b-2 border-gray-200 border-b-[#00469f]"
 					disabled={loading}
 					maxlength="1200"
 					bind:value={query}
@@ -227,9 +229,9 @@
 		</div>
 		<div class="flex justify-between">
 			<span class="text-[0.65rem] text-slate-400">
-				ASK GM can make mistakes. Consider checking important information.			
+				ASK GM can make mistakes. Consider checking important information.
 			</span>
-			<span  class="text-[0.85rem]">{query.length}/1200</span></div>
+			<span class="text-[0.85rem]">{query.length}/1200</span>
+		</div>
 	</div>
 </div>
-

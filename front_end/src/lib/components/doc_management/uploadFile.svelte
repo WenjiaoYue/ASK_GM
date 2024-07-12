@@ -5,6 +5,7 @@
 		hintEnd,
 		hintStart,
 		needRecreate,
+		netError,
 		parentIdx,
 		parentPath,
 		storageFiles,
@@ -21,6 +22,8 @@
 
 		const res = await getKnowledgeBaseId(file, path);
 		if (res === "Succeed") {
+			console.log('succeed');
+			
 			const newFile = {
 				name: file[0].name,
 				id: $parentPath + file[0].name,
@@ -37,9 +40,16 @@
 				files[$parentIdx].children.push(newFile);
 				$storageFiles = files;
 			}
+			hintStart.set(false);
+			hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
+		} else {
+			netError.set(true);
+			setTimeout(() => {
+				netError.set(false);
+			}, 3000);
+			hintStart.set(false);
+			hintEnd.set({ status: true, hintContent: "" });
 		}
-		hintStart.set(false);
-		hintEnd.set({ status: true, hintContent: "Uploaded Successfully" });
 	}
 
 	function addKnowledgeFiles() {
