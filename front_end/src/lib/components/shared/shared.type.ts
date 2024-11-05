@@ -48,8 +48,10 @@ export enum ERROR {
 }
 
 export type Message = {
-  role: MESSAGE_ROLE;
-  content: string;
+  tool: string;
+  content: [];
+  goal: string;
+  source: []
 };
 
 export type ChatListItem = {
@@ -60,6 +62,10 @@ export type ChatListItem = {
 export type Chat = {
   chatId: string;
   messages: Message[];
+  agentName: string,
+  agentDescripe: string,
+  selectedGoals:[],
+  summary: string
 };
 
 // In-memory only

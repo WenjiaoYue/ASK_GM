@@ -112,7 +112,7 @@
   on:mouseenter={handleMouseEnter}
   on:mouseleave={handleMouseLeave}
   type="button"
-  class={`relative w-full hover:bg-[#ebf1f9]  hover:text-black group flex items-center px-2 py-3 text-sm font-medium rounded-md ${
+  class={`relative w-full hover:bg-[#ebf1f9]  hover:text-black group flex items-center px-2 py-4 text-sm font-medium rounded-md ${
     chatId === currentChatID ? `bg-[#1d4dd5] text-white` : ''
   }`}
 >

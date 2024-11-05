@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>Intel Zizhu AskGM Home</title>
+	<title>AgentGPT</title>
 </svelte:head>
 
 <Content />

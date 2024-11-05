@@ -74,7 +74,7 @@
 		const newChatId = nanoid(5);
 
 		chatList$.update((chatList) => {
-			chatList.unshift(createNewChatListItem(newChatId, "New Chat"));
+			chatList.unshift(createNewChatListItem(newChatId, "新 Agent"));
 			return chatList;
 		});
 		chats$.update((chats) => {
@@ -103,7 +103,7 @@
 	};
 </script>
 
-<nav class="flex-1 space-y-1 px-1 pb-4 h-full w-full">
+<nav class="flex-1 space-y-1 px-1 pb-4 h-full w-full ">
 	<!-- Search -->
 	<div class="group relative mb-2 flex h-full w-full items-center h-full">
 		<div
@@ -135,22 +135,22 @@
 			bind:this={searchInput}
 			on:focus={handleSearchFocus}
 			on:blur={handleSearchBlur}
-			placeholder="Search"
+			placeholder="搜索"
 			type="text"
 			name="search"
-			class="block w-full rounded-2xl bg-gray-100 py-2 pl-10 pr-4 leading-normal text-gray-400 ring-opacity-90 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+			class="my-4 block w-full rounded-2xl bg-gray-100 py-2 pl-10 pr-4 leading-normal text-gray-400 ring-opacity-90 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
 		/>
 	</div>
 
 	<!-- New chat -->
 	<button
 		on:click={handleCreateNewChat}
-		class={`mb-2 flex h-10 w-full items-center rounded-md px-2 py-3 text-sm font-medium shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-[#ebf1f9] hover:text-black `}
+		class={`mb-2 flex h-15 w-full items-center rounded-md px-2 py-4 text-sm font-medium shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-[#ebf1f9] hover:text-black `}
 	>
 		<PlusIcon
 			overrideClasses={"hover:text-gray-500 mr-3 flex-shrink-0 h-5 w-5"}
 		/>
-		New chat
+		创建 Agent
 	</button>
 
 		<!-- Empty state -->
@@ -166,7 +166,7 @@
 		</div> -->
 	{/if}
 
-	<div class="carousel carousel-vertical mt-4 sm:h-[5rem] md:h-[10rem] lg:h-[20rem] xl:h-[26rem] overflow-auto">
+	<div class="carousel carousel-vertical mt-6 sm:h-[5rem] md:h-[10rem] lg:h-[20rem] xl:h-[40rem] overflow-auto gap-2">
 		{#each chatList as { chatId: cId, title }}
 			<SidebarChatItem chatId={cId} {title} bind:currentChatID />
 		{/each}

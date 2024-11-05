@@ -57,10 +57,18 @@ export const createNewChatListItem = (chatId: string, title: string): ChatListIt
 export const createNewChat = (
   chatId: string,
   messages: Message[],
+  agentName: string,
+  agentDescripe: string,
+  selectedGoals:[],
+  summary: string,
 ): Chat => {
   return {
     chatId,
     messages,
+    agentName,
+    agentDescripe,
+    selectedGoals,
+    summary
   };
 };
 
@@ -69,7 +77,11 @@ export const createNewChat = (
  */
 export const insertNewChat = (
   msgs: Message[],
-  title: string
+  title: string,
+  agentName: string,
+  agentDescripe: string,
+  selectedGoals:[],
+  summary: string
 ) => {
   const newChatId = nanoid(8);
 
@@ -78,7 +90,7 @@ export const insertNewChat = (
     return chatList;
   });
   chats$.update((chats) => {
-    chats[newChatId] = createNewChat(newChatId, msgs);
+    chats[newChatId] = createNewChat(newChatId, msgs, agentName, agentDescripe, selectedGoals, summary);
     return chats;
   });
 
@@ -108,10 +120,19 @@ export const insertNewChat = (
 export const updateChat = (
   id: string,
   msgs: Message[],
-  title: string
+  title: string,
+  agentName: string,
+  agentDescripe: string,
+  selectedGoals:[],
+  summary: string
 ) => {
   chats$.update((chats) => {
     chats[id].messages = msgs;
+    chats[id].agentName = agentName;
+    chats[id].agentDescripe = agentDescripe;
+    chats[id].selectedGoals = selectedGoals;
+    chats[id].summary = summary;
+
     return chats;
   });
 
@@ -147,12 +168,16 @@ export const updateChat = (
 export const upsertChat = (
   chatId: string,
   msgs: Message[],
-  title: string
+  title: string,
+  agentName: string,
+  agentDescripe: string,
+  selectedGoals:[],
+  summary: string
 ) => {
   if (!chatId) {
-    chatId = insertNewChat(msgs, title);
+    chatId = insertNewChat(msgs, title, agentName, agentDescripe, selectedGoals, summary);
   } else {
-    updateChat(chatId, msgs, title);
+    updateChat(chatId, msgs, title, agentName, agentDescripe, selectedGoals, summary);
   }
 
   return chatId;
