@@ -17,9 +17,11 @@
 		LOCAL_STORAGE_KEY,
 	} from "$lib/components/shared/shared.type";
 	import SidebarChatItem from "$lib/modules/chat/sidebar-chat-item.svelte";
-
-	export let currentChatID: string;
+	import SearchDelete from "$lib/assets/Agent/searchDelete.svelte";
+	import Search from "$lib/assets/Agent/search.svelte";
 	
+	export let currentChatID: string;
+
 	const chatListFuseOptions = {
 		// Lower threshold = closer match
 		threshold: 0.3,
@@ -35,7 +37,7 @@
 	let searchInput;
 	let isSearchInputFocused = false;
 	let searchQuery = "";
-	
+
 	$: chatListFuse = new Fuse($chatList$, chatListFuseOptions);
 	$: chatsFuse = new Fuse(Object.values($chats$), chatsFuseOptions);
 
@@ -78,7 +80,7 @@
 			return chatList;
 		});
 		chats$.update((chats) => {
-			chats[newChatId] = createNewChat(newChatId, []);
+			chats[newChatId] = createNewChat(newChatId, [], "", "", [], "");
 			return chats;
 		});
 
@@ -99,37 +101,20 @@
 				return banners;
 			});
 		}
-		currentChatID = newChatId
+		currentChatID = newChatId;
 	};
 </script>
 
-<nav class="flex-1 space-y-1 px-1 pb-4 h-full w-full ">
+<nav class="h-full w-full flex-1 space-y-1 px-1 pb-4">
 	<!-- Search -->
-	<div class="group relative mb-2 flex h-full w-full items-center h-full">
+	<div class="group relative mb-2 flex h-full h-full w-full items-center">
 		<div
 			class="absolute block flex h-10 w-auto cursor-pointer items-center justify-center p-3 pr-2 text-sm uppercase text-gray-500 sm:hidden"
 		>
-			<svg
-				fill="none"
-				class="relative h-5 w-5"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				stroke="currentColor"
-				viewBox="0 0 24 24"
-				><path
-					d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-				/></svg
-			>
+			<SearchDelete />
 		</div>
-		<svg
-			class="pointer-events-none absolute left-0 ml-4 hidden h-4 w-4 fill-current text-gray-500 group-hover:text-gray-400 sm:block"
-			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 20 20"
-			><path
-				d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"
-			/></svg
-		>
+		<Search />
+
 		<input
 			bind:value={searchQuery}
 			bind:this={searchInput}
@@ -145,7 +130,7 @@
 	<!-- New chat -->
 	<button
 		on:click={handleCreateNewChat}
-		class={`mb-2 flex h-15 w-full items-center rounded-md px-2 py-4 text-sm font-medium shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-[#ebf1f9] hover:text-black `}
+		class={`h-15 mb-2 flex w-full items-center rounded-md px-2 py-4 text-sm font-medium shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-[#ebf1f9] hover:text-black `}
 	>
 		<PlusIcon
 			overrideClasses={"hover:text-gray-500 mr-3 flex-shrink-0 h-5 w-5"}
@@ -153,8 +138,8 @@
 		创建 Agent
 	</button>
 
-		<!-- Empty state -->
-		{#if !chatList.length || chatList.length === 0}
+	<!-- Empty state -->
+	{#if !chatList.length || chatList.length === 0}
 		<!-- <div class="flex flex-col items-center justify-center py-6">
 			<div class="text-sm">No chats found</div>
 			<button
@@ -166,11 +151,11 @@
 		</div> -->
 	{/if}
 
-	<div class="carousel carousel-vertical mt-6 sm:h-[5rem] md:h-[10rem] lg:h-[20rem] xl:h-[40rem] overflow-auto gap-2">
+	<div
+		class="carousel carousel-vertical mt-6 gap-2 overflow-auto sm:h-[5rem] md:h-[10rem] lg:h-[20rem] xl:h-[40rem]"
+	>
 		{#each chatList as { chatId: cId, title }}
 			<SidebarChatItem chatId={cId} {title} bind:currentChatID />
 		{/each}
 	</div>
-
-
 </nav>

@@ -22,12 +22,12 @@
 		scrollToTop(); // Scroll to the top of the page
 	}
 
-	// function displaySummary() {
-	// 	isSummaryVisible = !isSummaryVisible; // 切换状态
-	// 	dispatch("displaySummary", { isSummaryVisible }); // 发送当前状态
+	function displaySummary() {
+		isSummaryVisible = !isSummaryVisible; 
+		dispatch("displaySummary", { isSummaryVisible }); 
 
-	// 	console.log('showSummary', isSummaryVisible);
-	// }
+		console.log('showSummary', isSummaryVisible);
+	}
 </script>
 
 <div class="relative mt-4 h-full overflow-auto hiddenScroll">
@@ -61,8 +61,9 @@
 				</div>
 			</li>
 		{/each}
-<!-- 
+
 		{#if summary !== ""}
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<li
 				class="mb-10 flex cursor-pointer items-start rounded-lg bg-white p-4 shadow-lg transition-colors duration-200"
 				on:click={() => displaySummary()}
@@ -78,7 +79,7 @@
 					</h3>
 				</div>
 			</li>
-		{/if} -->
+		{/if}
 	</ol>
 </div>
 

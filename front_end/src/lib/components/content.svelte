@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Chat from "$lib/components/chat/chat.svelte";
 	import History from "$lib/components/chat/history.svelte";
-	import QAJSON from "$lib/assets/AskGMJson/Ask_GM_QA.json";
 
 	let selectedContent = "";
 	let currentChatID = ''

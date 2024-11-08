@@ -2,7 +2,6 @@
 	export let chatId = "";
 	export let selectedContent = "";
 
-	import ChatMessage from "$lib/modules/chat/chat-message.svelte";
 	import { onMount } from "svelte";
 
 	// tool
@@ -53,7 +52,6 @@
 	let goals: any[] = [];
 	let showAgent: boolean = false;
 	let currentGoalIdx = 0;
-	import { Drawer, Button, CloseButton, A } from "flowbite-svelte";
 	import { sineIn } from "svelte/easing";
 
 	let hidden8 = true;
@@ -267,10 +265,6 @@
 
 	let isDrawerOpen = false; // 状态变量，用于控制抽屉的展开和收起
 
-	function toggleDrawer() {
-		isDrawerOpen = !isDrawerOpen; // 切换抽屉状态
-	}
-
 	// function handelDisplaySummary() {
 	// 	hidden8 = false;
 	// }
@@ -305,7 +299,6 @@
 					</p>
 				</div>
 
-				<!-- 中间部分的抽屉效果 -->
 				<div
 					class={`flex w-full flex-grow overflow-hidden transition-all duration-300 ${
 						isDrawerOpen ? "h-auto" : "h-0"
@@ -351,31 +344,9 @@
 							{/if}
 						</div>
 
-						<GenerateGoal {selectedGoalIndex} {chatMessages} />
+						<GenerateGoal {selectedGoalIndex} {chatMessages} {summary} />
 					</div>
 				</div>
-
-				<div class="p-4">
-					{#if summary !== ""}
-						<h2 class="pb-2 text-[1.2rem] font-semibold text-blue-600">
-							Summary:
-						</h2>
-					{/if}
-					<p class="text-sm">{summary}</p>
-				</div>
-
-				<Drawer
-					placement="bottom"
-					width="w-full"
-					transitionType="fly"
-					transitionParams={transitionParamsBottom}
-					bind:hidden={hidden8}
-					id="sidebar8"
-				>
-					<p class="mb-6 max-w-lg text-sm text-gray-500 dark:text-gray-400">
-						{summary}
-					</p>
-				</Drawer>
 			</main>
 		</div>
 	{/if}

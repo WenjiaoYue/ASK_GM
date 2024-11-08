@@ -7,6 +7,10 @@
 
 	export let selectedGoalIndex: number | null;
 	export let chatMessages;
+	export let summary;
+
+	console.log('chatMessages', chatMessages);
+	
 
 	// 监视 selectedGoalIndex 的变化
 	$: if (selectedGoalIndex !== null) {
@@ -16,10 +20,10 @@
 	const toggleOpenIndex = (index: number) => {
 		openIndex = openIndex === index ? null : index;
 	};
+	
 
 	const renderMarkdown = (content: string) => marked(content);
 
-	// 滚动到选中的目标
 	const scrollToSelectedGoal = () => {
 		if (selectedGoalIndex !== null) {
 			const goalElement = document.getElementById(`goal-${selectedGoalIndex}`);
